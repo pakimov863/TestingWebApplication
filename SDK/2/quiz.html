@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="generator" content="Codeply">
+	<title>Codeply simple HTML/CSS/JS preview</title>
+	<link rel="stylesheet" href="normalize.min.css">  
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<!--link rel="stylesheet" href="bootstrap-theme.min.css"-->
+</head>
+<body>
+	<div class="container">
+		<div class="col-md-10 column">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Domanda</h3>
+				</div>
+				<div class="panel-body">
+					<div class="radio">
+						<label>
+						<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""> Questa è la risposta uno. Fossi in te, la lascerei perdere
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+						<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Forse la due si avvicina... ma non ci giurerei
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+						<input type="radio" name="optionsRadios" id="optionsRadios3" value="option3"> Opzione tre — da' retta, è questa
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+						<input type="radio" name="optionsRadios" id="optionsRadios4" value="option4"> Sulla risposta quattro non ci metterei la mano sul fuoco...
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+						<input type="radio" name="optionsRadios" id="optionsRadios5" value="option5"> <div class="latex">\int_{0}^{\pi}\frac{x^{4}\left(1-x\right)^{4}}{1+x^{2}}dx =\frac{22}{7}-\pi</div>
+						</label>
+					</div>
+				</div>
+				<div class="panel-footer">
+					<a href="#" class="btn btn-primary " role="button">Conferma</a>
+					<a href="#" class="btn btn-default disabled" role="button">Avanti</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="jquery.min.js"></script>
+	<script src="jquery.jslatex.min.js"></script>
+	<script>$(".latex").latex()</script>
+	<script src="bootstrap.min.js"></script>
+</body>
+</html>
