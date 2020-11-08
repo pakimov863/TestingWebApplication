@@ -13,6 +13,8 @@
 
         public bool IsCorrect { get; set; }
 
+        public AnswerBlockType AnswerType { get; set; }
+
         public virtual QuizBlockDto Quiz { get; set; }
     }
 }

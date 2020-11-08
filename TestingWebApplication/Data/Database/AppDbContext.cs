@@ -99,6 +99,10 @@
         private void InitializeLinks(ModelBuilder modelBuilder)
         {
             modelBuilder
+                .Entity<AnswerBlockDto>()
+                .Property(e => e.AnswerType)
+                .HasConversion<string>();
+            modelBuilder
                 .Entity<QuizBlockDto>()
                 .HasOne(e => e.Question)
                 .WithOne(e => e.Quiz)
