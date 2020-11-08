@@ -1,8 +1,6 @@
 ﻿namespace TestingWebApplication.Data.Repository.Model
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class QuizBlockModel
     {
@@ -12,27 +10,8 @@
 
         public IList<AnswerBlockModel> Answers { get; set; }
 
-        public QuizBlockViewType AnswerViewType
-        {
-            get
-            {
-                if (Answers.Count == 1)
-                {
-                    return QuizBlockViewType.Text;
-                }
+        public AnswerViewType AnswersType { get; set; }
 
-                if (Answers.Count(e => e.IsCorrect) == 1)
-                {
-                    return QuizBlockViewType.Radio;
-                }
-
-                if (Answers.Count(e => e.IsCorrect) > 1)
-                {
-                    return QuizBlockViewType.Checkbox;
-                }
-
-                throw new ArgumentOutOfRangeException(nameof(Answers));
-            }
-        }
+        public IList<string> UserAnswer { get; set; }
     }
 }

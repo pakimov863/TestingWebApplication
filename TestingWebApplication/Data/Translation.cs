@@ -1,5 +1,6 @@
 ﻿namespace TestingWebApplication.Data
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Database.Model;
     using Repository.Model;
@@ -35,7 +36,21 @@
                 Id = dto.Id,
                 Question = Translate(dto.Question),
                 Answers = dto.Answers.Select(Translate).ToList(),
+                UserAnswer = new List<string>(),
             };
+
+            if (dto.Answers.Count == 1)
+            {
+                model.AnswersType = AnswerViewType.Text;
+            }
+            else if (dto.Answers.Count(e => e.IsCorrect) == 1)
+            {
+                model.AnswersType = AnswerViewType.Radio;
+            }
+            else if (dto.Answers.Count(e => e.IsCorrect) > 1)
+            {
+                model.AnswersType = AnswerViewType.Checkbox;
+            }
 
             return model;
         }

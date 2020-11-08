@@ -14,6 +14,8 @@
 
         public string Password { get; set; }
 
-        public virtual ICollection<QuizDto> Quizzes { get; set; }
+        public virtual ICollection<QuizDto> CreatedQuizzes { get; set; }
+
+        public virtual ICollection<GeneratedQuizDto> RespondedQuizzes { get; set; }
     }
 }

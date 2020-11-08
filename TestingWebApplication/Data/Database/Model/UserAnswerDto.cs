@@ -9,8 +9,12 @@
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
-        public long QuestionId { get; set; }
+        public long GeneratedQuizId { get; set; }
 
-        public long AnswerId { get; set; }
+        public long QuizBlockId { get; set; }
+
+        public string UserAnswer { get; set; }
+
+        public virtual GeneratedQuizDto LinkedQuiz { get; set; }
     }
 }

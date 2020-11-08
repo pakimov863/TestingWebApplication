@@ -1,5 +1,11 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model TestingWebApplication.Models.Testing.TestResultsViewModel
+
 @{
+    Layout = "_Layout";
+    ViewBag.Title = "Результаты тестирования";
 }
+
+<h1>Тестирование завершено - @Model.TestTitle</h1>
+<div>Тестирование началось в: @Model.StartTime.ToShortDateString() @Model.StartTime.ToShortTimeString()</div><br/>
+<div>Всего вопросов: @Model.QuestionCount</div><br/>
+<div>Правильных ответов: @Model.CorrectAnswersCount (@Model.CorrectAnswersPercent%)</div><br />

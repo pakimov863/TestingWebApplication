@@ -7,6 +7,7 @@
     using Data.Database;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Models.Testing;
     using Utils;
 
     public class TestingController : Controller
@@ -28,9 +29,6 @@
             return View();
         }
 
-        //http://localhost:10333/Testing/Test?token=2b14023c14f74bc496945d19dba89b55
-        //http://localhost:10333/Testing/Test?token=8ba7d6ff815f4934b86d68502f5f1ff7
-        //http://localhost:10333/Testing/Test?token=8e775ff00a624c2cb435c061b90419fe
         public async Task<IActionResult> Test(string token)
         {
             var generatedQuiz = await _db.UserQuizzes
@@ -48,26 +46,66 @@
                 return StatusCode(404, $"Тест с заданным идентификатором ({token}) не найден.");
             }
 
-            if (DateTime.Now >
-                generatedQuiz.StartTime.Add(TimeSpan.FromSeconds(generatedQuiz.SourceQuiz.TotalTimeSecs)))
+            if (DateTime.Now > generatedQuiz.StartTime.Add(TimeSpan.FromSeconds(generatedQuiz.SourceQuiz.TotalTimeSecs))
+                || generatedQuiz.IsEnded)
             {
                 return RedirectToAction("Results", new {token});
             }
 
             var quiz = Translation.Translate(generatedQuiz);
-            var rnd = new Random(quiz.StartTime.Millisecond);
-            quiz.SourceQuiz.QuizBlocks = quiz.SourceQuiz.QuizBlocks.Shuffle(rnd).ToList();
-            foreach (var quizBlock in quiz.SourceQuiz.QuizBlocks)
-            {
-                quizBlock.Answers = quizBlock.Answers.Shuffle(rnd).ToList();
-            }
+            quiz = CommonHelpers.ShuffleQuizData(quiz);
 
             return View(quiz);
         }
 
-        public ViewResult Results(string token)
+        public async Task<IActionResult> Results(string token)
         {
-            throw new NotImplementedException();
+            var generatedQuiz = await _db.UserQuizzes
+                .Where(e => e.Tag == token)
+                .Include(e => e.SourceQuiz)
+                .ThenInclude(e => e.QuizBlocks)
+                .ThenInclude(e => e.Question)
+                .Include(e => e.SourceQuiz)
+                .ThenInclude(e => e.QuizBlocks)
+                .ThenInclude(e => e.Answers)
+                .Include(e => e.UserAnswers)
+                .FirstOrDefaultAsync();
+
+            if (generatedQuiz == null)
+            {
+                return StatusCode(404, $"Тест с заданным идентификатором ({token}) не найден.");
+            }
+
+            var generatedQuizIsEnded = DateTime.Now > generatedQuiz.StartTime.Add(TimeSpan.FromSeconds(generatedQuiz.SourceQuiz.TotalTimeSecs))
+                                       || generatedQuiz.IsEnded;
+            if (!generatedQuizIsEnded)
+            {
+                return RedirectToAction("Test", new {token});
+            }
+
+            var view = new TestResultsViewModel
+            {
+                TestTitle = generatedQuiz.SourceQuiz.Title,
+                StartTime = generatedQuiz.StartTime,
+                QuestionCount =  generatedQuiz.SourceQuiz.QuizBlocks.Count,
+                CorrectAnswersCount = 0,
+            };
+
+            foreach (var quizBlock in generatedQuiz.SourceQuiz.QuizBlocks)
+            {
+                var quizUserAnswer = generatedQuiz.UserAnswers.FirstOrDefault(e => e.QuizBlockId == quizBlock.Id);
+                if (quizUserAnswer == null)
+                {
+                    continue;
+                }
+
+                var quizUserAnswerList = quizUserAnswer.UserAnswer.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+                var quizBlockAnswerList = quizBlock.Answers.Where(e => e.IsCorrect).ToList();
+
+
+            }
+
+            return View(view);
         }
     }
 }

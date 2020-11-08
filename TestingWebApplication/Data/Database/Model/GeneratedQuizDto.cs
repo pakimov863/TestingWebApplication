@@ -13,9 +13,13 @@
 
         public string Tag { get; set; }
 
+        public bool IsEnded { get; set; }
+
         public DateTime StartTime { get; set; }
 
         public virtual QuizDto SourceQuiz { get; set; }
+
+        public virtual UserDto RespondentUser { get; set; }
 
         public virtual ICollection<UserAnswerDto> UserAnswers { get; set; }
     }

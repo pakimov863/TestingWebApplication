@@ -78,6 +78,22 @@
                 .Entity<AnswerBlockDto>()
                 .Property(e => e.Id)
                 .ValueGeneratedOnAdd();
+
+            modelBuilder
+                .Entity<UserAnswerDto>()
+                .HasKey(e => e.Id);
+            modelBuilder
+                .Entity<UserAnswerDto>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder
+                .Entity<GeneratedQuizDto>()
+                .HasKey(e => e.Id);
+            modelBuilder
+                .Entity<GeneratedQuizDto>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
         }
         
         private void InitializeLinks(ModelBuilder modelBuilder)
@@ -100,8 +116,18 @@
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder
                 .Entity<UserDto>()
-                .HasMany(e => e.Quizzes)
+                .HasMany(e => e.CreatedQuizzes)
                 .WithOne(e => e.Creator)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder
+                .Entity<UserDto>()
+                .HasMany(e => e.RespondedQuizzes)
+                .WithOne(e => e.RespondentUser)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder
+                .Entity<GeneratedQuizDto>()
+                .HasMany(e => e.UserAnswers)
+                .WithOne(e => e.LinkedQuiz)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

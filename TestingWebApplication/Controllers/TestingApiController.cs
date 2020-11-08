@@ -33,11 +33,28 @@
                 return StatusCode(404, $"Тест с заданным идентификатором ({model.QuizId}) не найден.");
             }
 
+            var requiredUser = await _db.Users
+                .Where(e => string.IsNullOrWhiteSpace(e.Password))
+                .Where(e => e.UserName == model.Username)
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false);
+
+            if (requiredUser == null)
+            {
+                requiredUser = new UserDto
+                {
+                    UserName = model.Username.Trim(),
+                };
+
+                await _db.Users.AddAsync(requiredUser).ConfigureAwait(false);
+            }
+
             var generatedQuiz = new GeneratedQuizDto
             {
                 Tag = Guid.NewGuid().ToString().Replace("-", string.Empty),
                 StartTime = DateTime.Now,
                 SourceQuiz = requiredQuiz,
+                RespondentUser = requiredUser,
                 UserAnswers = new List<UserAnswerDto>()
             };
 
@@ -48,9 +65,55 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> QuizPublish([FromForm] GeneratedQuizModel tags)
+        public async Task<IActionResult> QuizPublish([FromForm] GeneratedQuizModel model)
         {
-            throw new NotImplementedException();
+            var quizDto = await _db.UserQuizzes
+                .Where(e => e.Id == model.Id)
+                .Include(e => e.UserAnswers)
+                .FirstOrDefaultAsync()
+                .ConfigureAwait(false);
+
+            if (quizDto == null)
+            {
+                return StatusCode(404, $"Тест с заданным идентификатором ({model.Id}) не найден.");
+            }
+
+            quizDto.UserAnswers = new List<UserAnswerDto>();
+            quizDto.IsEnded = true;
+
+            foreach (var quizBlock in model.SourceQuiz.QuizBlocks)
+            {
+                var userAnswerString = "";
+
+                foreach (var userAnswer in quizBlock.UserAnswer)
+                {
+                    int userAnswerInt;
+                    if (!int.TryParse(userAnswer, out userAnswerInt))
+                    {
+                        continue;
+                    }
+
+                    var answerBlock = quizBlock.Answers[userAnswerInt];
+                    if (!string.IsNullOrWhiteSpace(userAnswerString))
+                    {
+                        userAnswerString += Environment.NewLine;
+                    }
+
+                    userAnswerString += answerBlock.Id;
+                }
+
+                quizDto.UserAnswers.Add(new UserAnswerDto
+                {
+                    GeneratedQuizId = model.Id,
+                    QuizBlockId = quizBlock.Id,
+                    UserAnswer = userAnswerString,
+                });
+            }
+
+            _db.UserQuizzes.Update(quizDto);
+            await _db.SaveChangesAsync().ConfigureAwait(false);
+
+            return RedirectToAction("Results", "Testing", new {token = quizDto.Tag});
         }
     }
 }
