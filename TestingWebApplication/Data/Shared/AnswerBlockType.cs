@@ -1,4 +1,4 @@
-﻿namespace TestingWebApplication.Data.Database.Model
+﻿namespace TestingWebApplication.Data.Shared
 {
     public enum AnswerBlockType
     {

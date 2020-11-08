@@ -23,6 +23,7 @@
             {
                 Id = dto.Id,
                 Text = dto.Text,
+                AnswerType = dto.AnswerType,
                 IsCorrect = dto.IsCorrect,
             };
 
@@ -38,19 +39,6 @@
                 Answers = dto.Answers.Select(Translate).ToList(),
                 UserAnswer = new List<string>(),
             };
-
-            if (dto.Answers.Count == 1)
-            {
-                model.AnswersType = AnswerViewType.Text;
-            }
-            else if (dto.Answers.Count(e => e.IsCorrect) == 1)
-            {
-                model.AnswersType = AnswerViewType.Radio;
-            }
-            else if (dto.Answers.Count(e => e.IsCorrect) > 1)
-            {
-                model.AnswersType = AnswerViewType.Checkbox;
-            }
 
             return model;
         }

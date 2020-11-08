@@ -10,8 +10,6 @@
 
         public IList<AnswerBlockModel> Answers { get; set; }
 
-        public AnswerViewType AnswersType { get; set; }
-
         public IList<string> UserAnswer { get; set; }
     }
 }

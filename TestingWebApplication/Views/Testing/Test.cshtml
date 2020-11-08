@@ -1,5 +1,6 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using TestingWebApplication.Data.Repository.Model
+@using TestingWebApplication.Data.Shared
 @model TestingWebApplication.Data.Repository.Model.GeneratedQuizModel
 
 @{
@@ -36,17 +37,17 @@
                                 <div>
                                     @Html.HiddenFor(m => m.SourceQuiz.QuizBlocks[i].Answers[j].Id)
                                     <label>
-                                        @if (currentQuizBlock.AnswersType == AnswerViewType.Radio)
+                                        @if (currentAnswerBlock.AnswerType == AnswerBlockType.Radio)
                                         {
                                             @Html.RadioButton(Html.NameFor(m => m.SourceQuiz.QuizBlocks[i].UserAnswer), j)
                                             @currentAnswerBlock.Text
                                         }
-                                        else if (currentQuizBlock.AnswersType == AnswerViewType.Checkbox)
+                                        else if (currentAnswerBlock.AnswerType == AnswerBlockType.Checkbox)
                                         {
                                             @Html.CheckBox(Html.NameFor(m => m.SourceQuiz.QuizBlocks[i].UserAnswer), j)
                                             @currentAnswerBlock.Text
                                         }
-                                        else if (currentQuizBlock.AnswersType == AnswerViewType.Text)
+                                        else if (currentAnswerBlock.AnswerType == AnswerBlockType.Text)
                                         {
                                             @Html.TextBox(Html.NameFor(m => m.SourceQuiz.QuizBlocks[i].UserAnswer))
                                             break;
