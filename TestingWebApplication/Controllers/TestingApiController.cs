@@ -81,33 +81,39 @@
             quizDto.UserAnswers = new List<UserAnswerDto>();
             quizDto.IsEnded = true;
 
-            foreach (var quizBlock in model.SourceQuiz.QuizBlocks)
+            if (model.SourceQuiz.QuizBlocks != null)
             {
-                var userAnswerString = "";
-
-                foreach (var userAnswer in quizBlock.UserAnswer)
+                foreach (var quizBlock in model.SourceQuiz.QuizBlocks)
                 {
-                    int userAnswerInt;
-                    if (!int.TryParse(userAnswer, out userAnswerInt))
+                    var userAnswerString = "";
+
+                    if (quizBlock.UserAnswer != null)
                     {
-                        continue;
+                        foreach (var userAnswer in quizBlock.UserAnswer)
+                        {
+                            int userAnswerInt;
+                            if (!int.TryParse(userAnswer, out userAnswerInt))
+                            {
+                                continue;
+                            }
+
+                            var answerBlock = quizBlock.Answers[userAnswerInt];
+                            if (!string.IsNullOrWhiteSpace(userAnswerString))
+                            {
+                                userAnswerString += Environment.NewLine;
+                            }
+
+                            userAnswerString += answerBlock.Id;
+                        }
                     }
 
-                    var answerBlock = quizBlock.Answers[userAnswerInt];
-                    if (!string.IsNullOrWhiteSpace(userAnswerString))
+                    quizDto.UserAnswers.Add(new UserAnswerDto
                     {
-                        userAnswerString += Environment.NewLine;
-                    }
-
-                    userAnswerString += answerBlock.Id;
+                        GeneratedQuizId = model.Id,
+                        QuizBlockId = quizBlock.Id,
+                        UserAnswer = userAnswerString,
+                    });
                 }
-
-                quizDto.UserAnswers.Add(new UserAnswerDto
-                {
-                    GeneratedQuizId = model.Id,
-                    QuizBlockId = quizBlock.Id,
-                    UserAnswer = userAnswerString,
-                });
             }
 
             _db.UserQuizzes.Update(quizDto);

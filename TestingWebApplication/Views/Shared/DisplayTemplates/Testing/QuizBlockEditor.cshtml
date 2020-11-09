@@ -1,0 +1,52 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using TestingWebApplication.Data.Shared
+@model TestingWebApplication.Data.Repository.Model.QuizBlockModel
+
+<div class="col-md-10">
+    @Html.HiddenFor(m => m.Id)
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">@Model.Question.Text</h3>
+        </div>
+        <div class="panel-body">
+            @for (var i = 0; i < Model.Answers.Count; ++i)
+            {
+                var currentAnswerBlock = Model.Answers[i];
+                @Html.HiddenFor(m => Model.Answers[i].Id)
+
+                <div>
+                    <label>
+                        @if (currentAnswerBlock.AnswerType == AnswerBlockType.Radio)
+                        {
+                            <input id="@Html.IdFor(m => m.UserAnswer)"
+                                   name="@Html.NameFor(m => m.UserAnswer)"
+                                   type="radio"
+                                   value="@i" />
+                            @currentAnswerBlock.Text
+                        }
+                        else if (currentAnswerBlock.AnswerType == AnswerBlockType.Checkbox)
+                        {
+                            <input id="@Html.IdFor(m => m.UserAnswer)"
+                                   name="@Html.NameFor(m => m.UserAnswer)"
+                                   type="checkbox"
+                                   value="@i" />
+                            @currentAnswerBlock.Text
+                        }
+                        else if (currentAnswerBlock.AnswerType == AnswerBlockType.Text)
+                        {
+                            <input
+                                id="@Html.IdFor(m => m.UserAnswer)"
+                                name="@Html.NameFor(m => m.UserAnswer)"
+                                type="text"
+                                value="@i" />
+                        }
+                    </label>
+                </div>
+            }
+        </div>
+        <div class="panel-footer">
+            <a href="#" class="btn btn-primary" role="button">Подтвердить</a>
+            <a href="#" class="btn btn-default" role="button">Пропустить</a>
+        </div>
+    </div>
+</div>

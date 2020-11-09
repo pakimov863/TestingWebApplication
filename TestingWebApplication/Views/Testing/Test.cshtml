@@ -15,58 +15,13 @@
 <br />
 
 <div class="container">
-    <div class="row">
-        @using (Html.BeginForm("QuizPublish", "TestingApi", FormMethod.Post))
-        {
-            @Html.HiddenFor(m => m.Id)
-            for (var i = 0; i < Model.SourceQuiz.QuizBlocks.Count; ++i)
-            {
-                var currentQuizBlock = Model.SourceQuiz.QuizBlocks[i];
+    @using (Html.BeginForm("QuizPublish", "TestingApi", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.Id)
+        @Html.DisplayFor(m => m.SourceQuiz, "Testing/QuizEditor")
 
-                <div class="col">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            @Html.HiddenFor(m => m.SourceQuiz.QuizBlocks[i].Id)
-                            <h3 class="panel-title">@currentQuizBlock.Question.Text</h3>
-                        </div>
-                        <div class="panel-body">
-                            @for (var j = 0; j < currentQuizBlock.Answers.Count; ++j)
-                            {
-                                var currentAnswerBlock = currentQuizBlock.Answers[j];
-
-                                <div>
-                                    @Html.HiddenFor(m => m.SourceQuiz.QuizBlocks[i].Answers[j].Id)
-                                    <label>
-                                        @if (currentAnswerBlock.AnswerType == AnswerBlockType.Radio)
-                                        {
-                                            @Html.RadioButton(Html.NameFor(m => m.SourceQuiz.QuizBlocks[i].UserAnswer), j)
-                                            @currentAnswerBlock.Text
-                                        }
-                                        else if (currentAnswerBlock.AnswerType == AnswerBlockType.Checkbox)
-                                        {
-                                            @Html.CheckBox(Html.NameFor(m => m.SourceQuiz.QuizBlocks[i].UserAnswer), j)
-                                            @currentAnswerBlock.Text
-                                        }
-                                        else if (currentAnswerBlock.AnswerType == AnswerBlockType.Text)
-                                        {
-                                            @Html.TextBox(Html.NameFor(m => m.SourceQuiz.QuizBlocks[i].UserAnswer))
-                                            break;
-                                        }
-                                    </label>
-                                </div>
-                            }
-                        </div>
-                        <div class="panel-footer">
-                            <a href="#" class="btn btn-primary" role="button">Подтвердить</a>
-                            <a href="#" class="btn btn-default" role="button">Пропустить</a>
-                        </div>
-                    </div>
-                </div>
-            }
-
-            <input type="submit" value="Закончить" />
-        }
-    </div>
+        <input type="submit" value="Закончить" />
+    }
 </div>
 
 <script src="~/js/jquery.min.js"></script>
