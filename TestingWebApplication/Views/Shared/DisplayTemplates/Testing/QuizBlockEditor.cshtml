@@ -12,10 +12,10 @@
             @for (var i = 0; i < Model.Answers.Count; ++i)
             {
                 var currentAnswerBlock = Model.Answers[i];
-                @Html.HiddenFor(m => Model.Answers[i].Id)
 
                 <div>
                     <label>
+                        @Html.HiddenFor(m => Model.Answers[i].Id)
                         @if (currentAnswerBlock.AnswerType == AnswerBlockType.Radio)
                         {
                             <input id="@Html.IdFor(m => m.UserAnswer)"
@@ -34,11 +34,10 @@
                         }
                         else if (currentAnswerBlock.AnswerType == AnswerBlockType.Text)
                         {
-                            <input
-                                id="@Html.IdFor(m => m.UserAnswer)"
-                                name="@Html.NameFor(m => m.UserAnswer)"
-                                type="text"
-                                value="@i" />
+                            <input id="@Html.IdFor(m => m.UserAnswer)"
+                                   name="@Html.NameFor(m => m.UserAnswer)"
+                                   type="text"
+                                   value="@i" />
                         }
                     </label>
                 </div>
