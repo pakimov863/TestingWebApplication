@@ -9,34 +9,60 @@
     public class AppDbContext : DbContext
     {
         /// <summary>
-        /// 
+        /// Инициализирует новый экземпляра класса <see cref="AppDbContext"/>.
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">Параметры настройки подключения к БД.</param>
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
         }
 
+        /// <summary>
+        /// Получает или задает таблицу с пользователями.
+        /// </summary>
         public DbSet<UserDto> Users { get; set; }
         
+        /// <summary>
+        /// Получает или задает таблицу с тестами.
+        /// </summary>
         public DbSet<QuizDto> Quizzes { get; set; }
         
+        /// <summary>
+        /// Получает или задает таблицу с блоками теста.
+        /// </summary>
         public DbSet<QuizBlockDto> QuizBlocks { get; set; }
 
+        /// <summary>
+        /// Получает или задает таблицу с блоками вопросов.
+        /// </summary>
         public DbSet<QuestionBlockDto> Questions { get; set; }
 
+        /// <summary>
+        /// Получает или задает таблицу с блоками ответов.
+        /// </summary>
         public DbSet<AnswerBlockDto> Answers { get; set; }
 
+        /// <summary>
+        /// Получает или задает таблицу с пользовательскими ответами.
+        /// </summary>
         public DbSet<UserAnswerDto> UserAnswers { get; set; }
 
+        /// <summary>
+        /// Получает или задает таблицу с сгенерированными тестами.
+        /// </summary>
         public DbSet<GeneratedQuizDto> UserQuizzes { get; set; }
 
+        /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             InitializePrimaryKeys(modelBuilder);
             InitializeLinks(modelBuilder);
         }
 
+        /// <summary>
+        /// Выполняет настройку первичных ключей для таблиц.
+        /// </summary>
+        /// <param name="modelBuilder">Строитель модели БД.</param>
         private void InitializePrimaryKeys(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -96,6 +122,10 @@
                 .ValueGeneratedOnAdd();
         }
         
+        /// <summary>
+        /// Выполняет настройку связей между таблицами.
+        /// </summary>
+        /// <param name="modelBuilder">Строитель модели БД.</param>
         private void InitializeLinks(ModelBuilder modelBuilder)
         {
             modelBuilder

@@ -5,8 +5,15 @@
     using Model;
     using Shared;
 
+    /// <summary>
+    /// Утилитарный класс, содержащий вспомогательные действия для работы с базой данных.
+    /// </summary>
     public static class AppDbContextSeeder
     {
+        /// <summary>
+        /// Выполняет заполнение базы данных тестовыми данными.
+        /// </summary>
+        /// <param name="context">Контекст базы данных.</param>
         public static void Seed(AppDbContext context)
         {
             var user1 = new UserDto { UserName = "Admin", Password = "1" };
@@ -133,6 +140,10 @@
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Выполняет очистку базы данных.
+        /// </summary>
+        /// <param name="context">Контекст базы данных.</param>
         public static void Clear(AppDbContext context)
         {
             context.Database.EnsureDeleted();

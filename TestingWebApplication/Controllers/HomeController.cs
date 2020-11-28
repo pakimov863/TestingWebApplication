@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace TestingWebApplication.Controllers
+﻿namespace TestingWebApplication.Controllers
 {
-    using System.Linq;
     using Data.Database;
-    using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : Controller
     {

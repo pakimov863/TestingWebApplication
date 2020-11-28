@@ -8,19 +8,29 @@ namespace TestingWebApplication
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
 
+    /// <summary>
+    /// Класс инициализации веб-сервиса.
+    /// </summary>
     public class Startup
     {
-        private IConfiguration _config;
+        /// <summary>
+        /// Конфигурация приложения.
+        /// </summary>
+        private readonly IConfiguration _config;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="Startup"/>.
+        /// </summary>
+        /// <param name="config">Конфигурация приложения.</param>
         public Startup(IConfiguration config)
         {
             _config = config;
         }
 
         /// <summary>
-        /// 
+        /// Выполняет конфигурацию веб-сервиса.
         /// </summary>
-        /// <param name="services"></param>
+        /// <param name="services">Экземпляр IoC-контейнера.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<AppDbContext>(options =>
@@ -32,10 +42,10 @@ namespace TestingWebApplication
         }
 
         /// <summary>
-        /// 
+        /// Выполняет дополнительную конфигурацию сервиса.
         /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
+        /// <param name="app">Билдер приложения.</param>
+        /// <param name="env">Информация о среде исполнения.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

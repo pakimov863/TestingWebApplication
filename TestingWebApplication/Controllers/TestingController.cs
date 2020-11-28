@@ -10,25 +10,48 @@
     using Models.Testing;
     using Utils;
 
+    /// <summary>
+    /// Контроллер с методами для тестирования.
+    /// </summary>
     public class TestingController : Controller
     {
-        private AppDbContext _db;
+        /// <summary>
+        /// Контекст базы данных.
+        /// </summary>
+        private readonly AppDbContext _db;
 
+        /// <summary>
+        /// Инициализирует экземпляр класса <see cref="TestingController"/>.
+        /// </summary>
+        /// <param name="db">Контекст базы данных.</param>
         public TestingController(AppDbContext db)
         {
             _db = db;
         }
 
+        /// <summary>
+        /// Открывает главную страницу. Так как главная страница тут не нужна - выполняет перенаправление на страницу авторизации.
+        /// </summary>
+        /// <returns>Результат обработки.</returns>
         public IActionResult Index()
         {
             return RedirectToAction("Login");
         }
 
+        /// <summary>
+        /// Отображает страницу регистрации на тест.
+        /// </summary>
+        /// <returns>Результат обработки.</returns>
         public ViewResult Login()
         {
             return View();
         }
 
+        /// <summary>
+        /// Отображает страницу тестирования.
+        /// </summary>
+        /// <param name="token">Токен-идентификатор теста.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         public async Task<IActionResult> Test(string token)
         {
             var generatedQuiz = await _db.UserQuizzes
@@ -58,6 +81,11 @@
             return View(quiz);
         }
 
+        /// <summary>
+        /// Отображает страницу с результатами тестирования.
+        /// </summary>
+        /// <param name="token">Токен-идентификатор теста.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         public async Task<IActionResult> Results(string token)
         {
             var generatedQuiz = await _db.UserQuizzes

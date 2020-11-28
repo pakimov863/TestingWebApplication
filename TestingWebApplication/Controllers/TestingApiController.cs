@@ -11,15 +11,30 @@
     using Microsoft.EntityFrameworkCore;
     using Models.TestingApi;
 
+    /// <summary>
+    /// Контроллер для API-методов тестирования.
+    /// </summary>
     public class TestingApiController : Controller
     {
-        private AppDbContext _db;
+        /// <summary>
+        /// Контекст базы данных.
+        /// </summary>
+        private readonly AppDbContext _db;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="TestingApiController"/>.
+        /// </summary>
+        /// <param name="db">Контекст базы данных.</param>
         public TestingApiController(AppDbContext db)
         {
             _db = db;
         }
 
+        /// <summary>
+        /// Выполняет создание теста.
+        /// </summary>
+        /// <param name="model">Информация для создания теста.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpPost]
         public async Task<IActionResult> QuizCreate([FromForm] TestCreateViewModel model)
         {
@@ -64,6 +79,11 @@
             return RedirectToAction("Test", "Testing", new {token = generatedQuiz.Tag});
         }
 
+        /// <summary>
+        /// Выполняет публикацию теста и сохранение результатов.
+        /// </summary>
+        /// <param name="model">Информация для создания теста.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpPost]
         public async Task<IActionResult> QuizPublish([FromForm] GeneratedQuizModel model)
         {

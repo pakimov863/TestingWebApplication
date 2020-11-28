@@ -4,18 +4,36 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// Описание хранимого пользователя.
+    /// </summary>
     public class UserDto
     {
+        /// <summary>
+        /// Получает или задает идентификатор пользователя.
+        /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
+        /// <summary>
+        /// Получает или задает имя пользователя.
+        /// </summary>
         public string UserName { get; set; }
 
+        /// <summary>
+        /// Получает или задает пароль пользователя.
+        /// </summary>
         public string Password { get; set; }
 
-        public virtual ICollection<QuizDto> CreatedQuizzes { get; set; }
+        /// <summary>
+        /// Получает или задает коллекцию тестов, созданных пользователем.
+        /// </summary>
+        public virtual IList<QuizDto> CreatedQuizzes { get; set; }
 
-        public virtual ICollection<GeneratedQuizDto> RespondedQuizzes { get; set; }
+        /// <summary>
+        /// Получает или задает коллекцию пройденных пользователем тестов.
+        /// </summary>
+        public virtual IList<GeneratedQuizDto> RespondedQuizzes { get; set; }
     }
 }

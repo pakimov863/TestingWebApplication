@@ -5,8 +5,16 @@
     using Database.Model;
     using Repository.Model;
 
+    /// <summary>
+    /// Утилитарный класс с методами преобразования данных.
+    /// </summary>
     public static class Translation
     {
+        /// <summary>
+        /// Выполняет преобразование <see cref="QuestionBlockDto"/> в <see cref="QuestionBlockModel"/>.
+        /// </summary>
+        /// <param name="dto">Исходный объект.</param>
+        /// <returns>Преобразованный объект.</returns>
         public static QuestionBlockModel Translate(QuestionBlockDto dto)
         {
             var model = new QuestionBlockModel
@@ -17,6 +25,11 @@
             return model;
         }
 
+        /// <summary>
+        /// Выполняет преобразование <see cref="AnswerBlockDto"/> в <see cref="AnswerBlockModel"/>.
+        /// </summary>
+        /// <param name="dto">Исходный объект.</param>
+        /// <returns>Преобразованный объект.</returns>
         public static AnswerBlockModel Translate(AnswerBlockDto dto)
         {
             var model = new AnswerBlockModel
@@ -30,6 +43,11 @@
             return model;
         }
 
+        /// <summary>
+        /// Выполняет преобразование <see cref="QuizBlockDto"/> в <see cref="QuizBlockModel"/>.
+        /// </summary>
+        /// <param name="dto">Исходный объект.</param>
+        /// <returns>Преобразованный объект.</returns>
         public static QuizBlockModel Translate(QuizBlockDto dto)
         {
             var model = new QuizBlockModel
@@ -43,6 +61,11 @@
             return model;
         }
 
+        /// <summary>
+        /// Выполняет преобразование <see cref="QuizDto"/> в <see cref="QuizModel"/>.
+        /// </summary>
+        /// <param name="dto">Исходный объект.</param>
+        /// <returns>Преобразованный объект.</returns>
         public static QuizModel Translate(QuizDto dto)
         {
             var model = new QuizModel
@@ -55,6 +78,11 @@
             return model;
         }
 
+        /// <summary>
+        /// Выполняет преобразование <see cref="GeneratedQuizDto"/> в <see cref="GeneratedQuizModel"/>.
+        /// </summary>
+        /// <param name="dto">Исходный объект.</param>
+        /// <returns>Преобразованный объект.</returns>
         public static GeneratedQuizModel Translate(GeneratedQuizDto dto)
         {
             var model = new GeneratedQuizModel
