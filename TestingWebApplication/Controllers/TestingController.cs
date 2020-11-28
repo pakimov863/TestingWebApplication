@@ -99,10 +99,10 @@
                     continue;
                 }
 
-                var quizUserAnswerList = quizUserAnswer.UserAnswer.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
-                var quizBlockAnswerList = quizBlock.Answers.Where(e => e.IsCorrect).ToList();
-
-
+                if (CommonHelpers.CheckQuizAnswer(quizBlock, quizUserAnswer))
+                {
+                    view.CorrectAnswersCount++;
+                }
             }
 
             return View(view);

@@ -25,7 +25,7 @@
                         Question = new QuestionBlockDto {Text = "Text of question 1?"},
                         Answers = new List<AnswerBlockDto>
                         {
-                            new AnswerBlockDto {Text = "Text of answer 1-1", AnswerType = AnswerBlockType.Radio,  IsCorrect = true},
+                            new AnswerBlockDto {Text = "Text of answer 1-1!", AnswerType = AnswerBlockType.Radio,  IsCorrect = true},
                             new AnswerBlockDto {Text = "Text of answer 1-2", AnswerType = AnswerBlockType.Radio}
                         }
                     },
@@ -35,7 +35,7 @@
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 2-1", AnswerType = AnswerBlockType.Radio},
-                            new AnswerBlockDto {Text = "Text of answer 2-2", AnswerType = AnswerBlockType.Radio, IsCorrect = true}
+                            new AnswerBlockDto {Text = "Text of answer 2-2!", AnswerType = AnswerBlockType.Radio, IsCorrect = true}
                         }
                     },
                     new QuizBlockDto
@@ -43,8 +43,8 @@
                         Question = new QuestionBlockDto {Text = "Text of question 3?"},
                         Answers = new List<AnswerBlockDto>
                         {
-                            new AnswerBlockDto {Text = "Text of answer 3-1", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true},
-                            new AnswerBlockDto {Text = "Text of answer 3-2", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true}
+                            new AnswerBlockDto {Text = "Text of answer 3-1!", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true},
+                            new AnswerBlockDto {Text = "Text of answer 3-2!", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true}
                         }
                     },
                     new QuizBlockDto
@@ -53,7 +53,15 @@
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 4-1", AnswerType = AnswerBlockType.Radio},
-                            new AnswerBlockDto {Text = "Text of answer 4-2", AnswerType = AnswerBlockType.Radio, IsCorrect = true}
+                            new AnswerBlockDto {Text = "Text of answer 4-2!", AnswerType = AnswerBlockType.Radio, IsCorrect = true}
+                        }
+                    },
+                    new QuizBlockDto
+                    {
+                        Question = new QuestionBlockDto {Text = "Text of question 5?"},
+                        Answers = new List<AnswerBlockDto>
+                        {
+                            new AnswerBlockDto {Text = "CORRECT", AnswerType = AnswerBlockType.Text, IsCorrect = true}
                         }
                     }
                 },
@@ -71,7 +79,7 @@
                         Question = new QuestionBlockDto {Text = "Text of question 1?"},
                         Answers = new List<AnswerBlockDto>
                         {
-                            new AnswerBlockDto {Text = "Text of answer 1-1", AnswerType = AnswerBlockType.Radio, IsCorrect = true},
+                            new AnswerBlockDto {Text = "Text of answer 1-1!", AnswerType = AnswerBlockType.Radio, IsCorrect = true},
                             new AnswerBlockDto {Text = "Text of answer 1-2", AnswerType = AnswerBlockType.Radio},
                             new AnswerBlockDto {Text = "Text of answer 1-3", AnswerType = AnswerBlockType.Radio}
                         }
@@ -81,8 +89,8 @@
                         Question = new QuestionBlockDto {Text = "Text of question 2?"},
                         Answers = new List<AnswerBlockDto>
                         {
-                            new AnswerBlockDto {Text = "Text of answer 2-1", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true},
-                            new AnswerBlockDto {Text = "Text of answer 2-2", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true},
+                            new AnswerBlockDto {Text = "Text of answer 2-1!", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true},
+                            new AnswerBlockDto {Text = "Text of answer 2-2!", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true},
                             new AnswerBlockDto {Text = "Text of answer 2-3", AnswerType = AnswerBlockType.Checkbox}
                         }
                     },
@@ -93,7 +101,7 @@
                         {
                             new AnswerBlockDto {Text = "Text of answer 3-1", AnswerType = AnswerBlockType.Radio},
                             new AnswerBlockDto {Text = "Text of answer 3-2", AnswerType = AnswerBlockType.Radio},
-                            new AnswerBlockDto {Text = "Text of answer 3-3", AnswerType = AnswerBlockType.Radio, IsCorrect = true}
+                            new AnswerBlockDto {Text = "Text of answer 3-3!", AnswerType = AnswerBlockType.Radio, IsCorrect = true}
                         }
                     },
                     new QuizBlockDto
@@ -104,8 +112,16 @@
                             new AnswerBlockDto {Text = "Text of answer 4-1", AnswerType = AnswerBlockType.Radio},
                             new AnswerBlockDto {Text = "Text of answer 4-2", AnswerType = AnswerBlockType.Radio},
                             new AnswerBlockDto {Text = "Text of answer 4-3", AnswerType = AnswerBlockType.Radio},
-                            new AnswerBlockDto {Text = "Text of answer 4-4", AnswerType = AnswerBlockType.Radio, IsCorrect = true},
+                            new AnswerBlockDto {Text = "Text of answer 4-4!", AnswerType = AnswerBlockType.Radio, IsCorrect = true},
                             new AnswerBlockDto {Text = "Text of answer 4-5", AnswerType = AnswerBlockType.Radio}
+                        }
+                    },
+                    new QuizBlockDto
+                    {
+                        Question = new QuestionBlockDto {Text = "Text of question 5?"},
+                        Answers = new List<AnswerBlockDto>
+                        {
+                            new AnswerBlockDto {Text = "CORRECT", AnswerType = AnswerBlockType.Text, IsCorrect = true}
                         }
                     }
                 },

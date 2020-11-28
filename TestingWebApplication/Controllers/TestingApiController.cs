@@ -91,19 +91,21 @@
                     {
                         foreach (var userAnswer in quizBlock.UserAnswer)
                         {
-                            int userAnswerInt;
-                            if (!int.TryParse(userAnswer, out userAnswerInt))
-                            {
-                                continue;
-                            }
-
-                            var answerBlock = quizBlock.Answers[userAnswerInt];
                             if (!string.IsNullOrWhiteSpace(userAnswerString))
                             {
                                 userAnswerString += Environment.NewLine;
                             }
 
-                            userAnswerString += answerBlock.Id;
+                            int userAnswerInt;
+                            if (int.TryParse(userAnswer, out userAnswerInt))
+                            {
+                                var answerBlock = quizBlock.Answers[userAnswerInt];
+                                userAnswerString += answerBlock.Id;
+                            }
+                            else
+                            {
+                                userAnswerString += userAnswer;
+                            }
                         }
                     }
 
