@@ -12,7 +12,7 @@
     using Models.TestingApi;
 
     /// <summary>
-    /// Контроллер для API-методов тестирования.
+    /// Контроллер для API-методов контроллера тестирования.
     /// </summary>
     public class TestingApiController : Controller
     {
