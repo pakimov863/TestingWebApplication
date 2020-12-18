@@ -14,9 +14,15 @@
         public long QuizId { get; set; }
         
         /// <summary>
-        /// Получает или задает имя пользователя, выполняющего тест.
+        /// Получает или задает идентификатор пользователя, выполняющего тест.
         /// </summary>
         [Required]
-        public string Username { get; set; }
+        public long UserId { get; set; }
+        
+        /// <summary>
+        /// Получает или задает идентификатор группы пользователя, выполняющего тест.
+        /// </summary>
+        [Required]
+        public string UserGroupId { get; set; }
     }
 }

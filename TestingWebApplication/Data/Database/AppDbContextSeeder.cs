@@ -1,7 +1,6 @@
 ﻿namespace TestingWebApplication.Data.Database
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Model;
     using Shared;
 
@@ -16,11 +15,36 @@
         /// <param name="context">Контекст базы данных.</param>
         public static void Seed(AppDbContext context)
         {
-            var user1 = new UserDto { UserName = "Admin", Password = "1" };
-            context.Users.Add(user1);
+            //// Группы.
+            var group1 = new UserGroupDto {Title = "Преподаватели", Visible = false};
+            context.UserGroups.Add(group1);
+            var group2 = new UserGroupDto {Title = "1А", Visible = true};
+            context.UserGroups.Add(group2);
             context.SaveChanges();
-            var userFromDb = context.Users.First();
 
+            //// Пользователи.
+            var user1 = new UserDto {UserName = "Admin", Password = "1"};
+            context.Users.Add(user1);
+            var user2 = new UserDto {UserName = "Иван Петров", Password = string.Empty};
+            context.Users.Add(user2);
+            var user3 = new UserDto {UserName = "Алексей Иванов", Password = string.Empty};
+            context.Users.Add(user3);
+            var user4 = new UserDto {UserName = "Сергей Алексеев", Password = string.Empty};
+            context.Users.Add(user4);
+            context.SaveChanges();
+
+            //// Привязки к группам.
+            var groupLinker1 = new UserGroupLinkerDto {LinkedUser = user1, LinkedGroup = group1};
+            context.UserGroupLinkers.Add(groupLinker1);
+            var groupLinker2 = new UserGroupLinkerDto {LinkedUser = user2, LinkedGroup = group2};
+            context.UserGroupLinkers.Add(groupLinker2);
+            var groupLinker3 = new UserGroupLinkerDto {LinkedUser = user3, LinkedGroup = group2};
+            context.UserGroupLinkers.Add(groupLinker3);
+            var groupLinker4 = new UserGroupLinkerDto {LinkedUser = user4, LinkedGroup = group2};
+            context.UserGroupLinkers.Add(groupLinker4);
+            context.SaveChanges();
+
+            //// Тесты.
             var quiz1 = new QuizDto
             {
                 Title = "Title of quiz 1",
@@ -29,7 +53,7 @@
                 {
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 1?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 1?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 1-1!", AnswerType = AnswerBlockType.Radio,  IsCorrect = true},
@@ -38,7 +62,7 @@
                     },
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 2?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 2?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 2-1", AnswerType = AnswerBlockType.Radio},
@@ -47,7 +71,7 @@
                     },
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 3?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 3?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 3-1!", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true},
@@ -56,7 +80,7 @@
                     },
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 4?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 4?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 4-1", AnswerType = AnswerBlockType.Radio},
@@ -65,14 +89,14 @@
                     },
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 5?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 5?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "CORRECT", AnswerType = AnswerBlockType.Text, IsCorrect = true}
                         }
                     }
                 },
-                Creator = userFromDb
+                Creator = user1
             };
 
             var quiz2 = new QuizDto
@@ -83,7 +107,7 @@
                 {
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 1?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 1?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 1-1!", AnswerType = AnswerBlockType.Radio, IsCorrect = true},
@@ -93,7 +117,7 @@
                     },
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 2?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 2?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 2-1!", AnswerType = AnswerBlockType.Checkbox, IsCorrect = true},
@@ -103,7 +127,7 @@
                     },
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 3?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 3?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 3-1", AnswerType = AnswerBlockType.Radio},
@@ -113,7 +137,7 @@
                     },
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 4?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 4?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "Text of answer 4-1", AnswerType = AnswerBlockType.Radio},
@@ -125,14 +149,14 @@
                     },
                     new QuizBlockDto
                     {
-                        Question = new QuestionBlockDto {Text = "Text of question 5?"},
+                        Question = new QuestionBlockDto {Text = "Text of question 5?", QuestionType = QuestionBlockType.Text},
                         Answers = new List<AnswerBlockDto>
                         {
                             new AnswerBlockDto {Text = "CORRECT", AnswerType = AnswerBlockType.Text, IsCorrect = true}
                         }
                     }
                 },
-                Creator = userFromDb
+                Creator = user1
             };
 
             context.Quizzes.Add(quiz1);

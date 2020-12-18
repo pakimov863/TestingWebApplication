@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using Shared;
 
     /// <summary>
     /// Описание хранимого блока вопроса.
@@ -19,6 +20,11 @@
         /// Получает или задает текст вопроса.
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Получает или задает тип вопроса.
+        /// </summary>
+        public QuestionBlockType QuestionType { get; set; }
 
         /// <summary>
         /// Получает или задает идентификатор связанного блока теста.

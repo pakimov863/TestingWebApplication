@@ -6,19 +6,109 @@
     ViewBag.Title = "Авторизация для тестирования";
 }
 
-<h1>Авторизация для тестирования</h1>
+<div class="container">
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 well">
+        <h3 class="text-center">Авторизация для тестирования</h3>
+        
+        <form asp-controller="TestingApi" asp-action="QuizCreate" method="post">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label asp-for="UserGroupId">Группа</label>
+                    <select asp-for="UserGroupId" class="form-control"></select>
+                    <span asp-validation-for="UserGroupId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label asp-for="UserId">Пользователь</label>
+                    <select asp-for="UserId" class="form-control"></select>
+                    <span asp-validation-for="UserId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label asp-for="QuizId">Тест</label>
+                    <select asp-for="QuizId" class="form-control"></select>
+                    <span asp-validation-for="QuizId" class="text-danger"></span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Начать</button>
+        </form>
+    </div>
+</div>
+</div>
 
-<form asp-controller="TestingApi" asp-action="QuizCreate" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="QuizId"></label>
-        <input asp-for="QuizId" class="form-control" />
-        <span asp-validation-for="QuizId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Username"></label>
-        <input asp-for="Username" class="form-control" />
-        <span asp-validation-for="Username" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
+<script>
+    var userGroupSelect = $("#UserGroupId");
+    var userNameSelect = $("#UserId");
+    var quizSelect = $("#QuizId");
+
+    userGroupSelect.on("change", function() {
+        userNameSelect.prop("disabled", true);
+        userNameSelect.empty();
+        quizSelect.prop("disabled", true);
+        quizSelect.empty();
+
+        var userGroupValue = userGroupSelect.children("option:selected").val();
+        $.get("/TestingApi/GetListUsers", { groupId: userGroupValue })
+            .done(function (dataArr) {
+                userNameSelect.append("<option value='-1'>...</option>");
+
+                $.each(dataArr, function (index, value) {
+                    userNameSelect.append("<option value='" + value.id + "'>" + value.userName + "</option>");
+                });
+
+                userNameSelect.trigger("change");
+            })
+            .always(function() {
+                userNameSelect.prop("disabled", false);
+                quizSelect.prop("disabled", false);
+            });
+    });
+
+    userNameSelect.on("change", function() {
+        quizSelect.prop("disabled", true);
+        quizSelect.empty();
+
+        var userGroupValue = userGroupSelect.children("option:selected").val();
+        var userNameValue = userNameSelect.children("option:selected").val();
+        $.get("/TestingApi/GetListTests", { groupId: userGroupValue, userId: userNameValue })
+            .done(function (dataArr) {
+                quizSelect.append("<option value='-1'>...</option>");
+
+                $.each(dataArr, function (index, value) {
+                    quizSelect.append("<option value='" + value.id + "'>" + value.title + "</option>");
+                });
+            })
+            .always(function () {
+                userNameSelect.prop("disabled", false);
+                quizSelect.prop("disabled", false);
+            });
+    });
+
+    $(document).ready(function () {
+        userGroupSelect.prop("disabled", true);
+        userGroupSelect.empty();
+        userNameSelect.prop("disabled", true);
+        userNameSelect.empty();
+        quizSelect.prop("disabled", true);
+        quizSelect.empty();
+
+        $.get("/TestingApi/GetListGroups")
+            .done(function (dataArr) {
+                userGroupSelect.append("<option value='-1'>...</option>");
+
+                $.each(dataArr, function (index, value) {
+                    userGroupSelect.append("<option value='" + value.id + "'>" + value.title + "</option>");
+                });
+
+                userGroupSelect.trigger("change");
+            })
+            .always(function () {
+                userGroupSelect.prop("disabled", false);
+                userNameSelect.prop("disabled", false);
+                quizSelect.prop("disabled", false);
+            });
+    });
+</script>

@@ -32,6 +32,11 @@
         public virtual IList<QuizDto> CreatedQuizzes { get; set; }
 
         /// <summary>
+        /// Получает или задает коллекцию связей к группам, к которым принадлежит пользователь.
+        /// </summary>
+        public virtual IList<UserGroupLinkerDto> GroupLinks { get; set; }
+
+        /// <summary>
         /// Получает или задает коллекцию пройденных пользователем тестов.
         /// </summary>
         public virtual IList<GeneratedQuizDto> RespondedQuizzes { get; set; }

@@ -1,11 +1,9 @@
 ﻿namespace TestingWebApplication.Data.Repository.Model
 {
-    using System.Collections.Generic;
-
     /// <summary>
-    /// Модель теста.
+    /// Упрощенная модель теста.
     /// </summary>
-    public class QuizModel
+    public class SimpleQuizModel
     {
         /// <summary>
         /// Получает или задает идентификатор теста.
@@ -21,10 +19,5 @@
         /// Получает или задает время на прохождение теста в секундах.
         /// </summary>
         public long TotalTimeSecs { get; set; }
-
-        /// <summary>
-        /// Получает или задает коллекцию вопросов теста.
-        /// </summary>
-        public IList<QuizBlockModel> QuizBlocks { get; set; }
     }
 }

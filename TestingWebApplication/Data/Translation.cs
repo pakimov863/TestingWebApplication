@@ -70,6 +70,7 @@
         {
             var model = new QuizModel
             {
+                Id = dto.Id,
                 Title = dto.Title,
                 TotalTimeSecs = dto.TotalTimeSecs,
                 QuizBlocks = dto.QuizBlocks.Select(Translate).ToList(),
@@ -90,6 +91,55 @@
                 Id = dto.Id,
                 StartTime = dto.StartTime,
                 SourceQuiz = Translate(dto.SourceQuiz),
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Выполняет преобразование <see cref="UserGroupDto"/> в <see cref="SimpleUserGroupModel"/>.
+        /// </summary>
+        /// <param name="dto">Исходный объект.</param>
+        /// <returns>Преобразованный объект.</returns>
+        public static SimpleUserGroupModel SimpleTranslate(UserGroupDto dto)
+        {
+            var model = new SimpleUserGroupModel
+            {
+                Id = dto.Id,
+                Title = dto.Title,
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Выполняет преобразование <see cref="UserDto"/> в <see cref="SimpleUserModel"/>.
+        /// </summary>
+        /// <param name="dto">Исходный объект.</param>
+        /// <returns>Преобразованный объект.</returns>
+        public static SimpleUserModel SimpleTranslate(UserDto dto)
+        {
+            var model = new SimpleUserModel
+            {
+                Id = dto.Id,
+                UserName = dto.UserName,
+            };
+
+            return model;
+        }
+
+        /// <summary>
+        /// Выполняет преобразование <see cref="QuizDto"/> в <see cref="SimpleQuizModel"/>.
+        /// </summary>
+        /// <param name="dto">Исходный объект.</param>
+        /// <returns>Преобразованный объект.</returns>
+        public static SimpleQuizModel SimpleTranslate(QuizDto dto)
+        {
+            var model = new SimpleQuizModel
+            {
+                Id = dto.Id,
+                Title = dto.Title,
+                TotalTimeSecs = dto.TotalTimeSecs,
             };
 
             return model;
