@@ -2,7 +2,7 @@
 @using TestingWebApplication.Data.Shared
 @model TestingWebApplication.Data.Repository.Model.QuizBlockModel
 
-<div class="col-md-10">
+<div class="col-md-8 col-xs-8">
     @Html.HiddenFor(m => m.Id)
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -42,10 +42,6 @@
                     </label>
                 </div>
             }
-        </div>
-        <div class="panel-footer">
-            <a href="#" class="btn btn-primary" role="button">Подтвердить</a>
-            <a href="#" class="btn btn-default" role="button">Пропустить</a>
         </div>
     </div>
 </div>

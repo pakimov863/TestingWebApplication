@@ -8,6 +8,7 @@
     <Folder Include="Views\Home\" />
     <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\img\" />
+    <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
 
   <ItemGroup>
