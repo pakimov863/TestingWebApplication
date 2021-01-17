@@ -1,12 +1,13 @@
 ﻿namespace TestingWebApplication.Data.Database
 {
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Model;
 
     /// <summary>
     /// Класс, описывающий контекст базы данных.
     /// </summary>
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<UserDto>
     {
         /// <summary>
         /// Инициализирует новый экземпляра класса <see cref="AppDbContext"/>.
@@ -16,11 +17,6 @@
             : base(options)
         {
         }
-
-        /// <summary>
-        /// Получает или задает таблицу с пользователями.
-        /// </summary>
-        public DbSet<UserDto> Users { get; set; }
         
         /// <summary>
         /// Получает или задает таблицу с тестами.
@@ -52,19 +48,11 @@
         /// </summary>
         public DbSet<GeneratedQuizDto> UserQuizzes { get; set; }
 
-        /// <summary>
-        /// Получает или задает таблицу с группами пользователей.
-        /// </summary>
-        public DbSet<UserGroupDto> UserGroups { get; set; }
-
-        /// <summary>
-        /// Получает или задает таблицу с связями между пользователями и группами.
-        /// </summary>
-        public DbSet<UserGroupLinkerDto> UserGroupLinkers { get; set; }
-
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             InitializePrimaryKeys(modelBuilder);
             InitializeLinks(modelBuilder);
         }
@@ -76,14 +64,6 @@
         private void InitializePrimaryKeys(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Entity<UserDto>()
-                .HasKey(e => e.Id);
-            modelBuilder
-                .Entity<UserDto>()
-                .Property(e => e.Id)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder
                 .Entity<QuizDto>()
                 .HasKey(e => e.Id);
             modelBuilder
@@ -128,22 +108,6 @@
                 .HasKey(e => e.Id);
             modelBuilder
                 .Entity<GeneratedQuizDto>()
-                .Property(e => e.Id)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder
-                .Entity<UserGroupDto>()
-                .HasKey(e => e.Id);
-            modelBuilder
-                .Entity<UserGroupDto>()
-                .Property(e => e.Id)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder
-                .Entity<UserGroupLinkerDto>()
-                .HasKey(e => e.Id);
-            modelBuilder
-                .Entity<UserGroupLinkerDto>()
                 .Property(e => e.Id)
                 .ValueGeneratedOnAdd();
         }
@@ -192,16 +156,6 @@
                 .Entity<GeneratedQuizDto>()
                 .HasMany(e => e.UserAnswers)
                 .WithOne(e => e.LinkedQuiz)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder
-                .Entity<UserDto>()
-                .HasMany(e => e.GroupLinks)
-                .WithOne(e => e.LinkedUser)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder
-                .Entity<UserGroupDto>()
-                .HasMany(e => e.UserLinks)
-                .WithOne(e => e.LinkedGroup)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

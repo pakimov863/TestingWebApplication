@@ -1,0 +1,19 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model TestingWebApplication.Models.AdminRoles.CreateRoleViewModel
+
+@{
+    ViewBag.Title = "Создание роли";
+}
+
+<form method="post">
+    <div asp-validation-summary="All"></div>
+    <div class="form-group row">
+        <label asp-for="RoleName"></label>
+        <div>
+            <input asp-for="RoleName">
+            <span asp-validation-for="RoleName"></span>
+        </div>
+    </div>
+
+    <button type="submit">Создать</button>
+</form>

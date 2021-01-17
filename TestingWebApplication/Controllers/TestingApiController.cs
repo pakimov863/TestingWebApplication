@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Data;
     using Data.Database;
     using Data.Database.Model;
     using Data.Repository.Model;
@@ -50,7 +49,6 @@
             }
 
             var requiredUser = await _db.Users
-                .Where(e => string.IsNullOrWhiteSpace(e.Password))
                 .Where(e => e.Id == model.UserId)
                 .FirstOrDefaultAsync()
                 .ConfigureAwait(false);
@@ -138,72 +136,6 @@
             await _db.SaveChangesAsync().ConfigureAwait(false);
 
             return RedirectToAction("Results", "Testing", new {token = quizDto.Tag});
-        }
-
-        /// <summary>
-        /// Выполняет получение списка групп пользователей.
-        /// </summary>
-        /// <returns>Задача, возвращающая результат обработки.</returns>
-        [HttpGet]
-        public async Task<JsonResult> GetListGroups()
-        {
-            var groupsFromDb = await _db.UserGroups
-                .Where(e => e.Visible)
-                .ToListAsync()
-                .ConfigureAwait(false);
-
-            var convertedGroups = groupsFromDb
-                .Select(Translation.SimpleTranslate)
-                .ToList();
-
-            return new JsonResult(convertedGroups);
-        }
-
-        /// <summary>
-        /// Выполняет получение списка пользователей по группе.
-        /// </summary>
-        /// <param name="groupId">Идентификатор группы пользователя.</param>
-        /// <returns>Задача, возвращающая результат обработки.</returns>
-        [HttpGet]
-        public async Task<JsonResult> GetListUsers([FromQuery] long groupId)
-        {
-            var selectedGroup = await _db.UserGroups
-                .Where(e => e.Id == groupId)
-                .Include(e => e.UserLinks)
-                .ThenInclude(e => e.LinkedUser)
-                .FirstOrDefaultAsync()
-                .ConfigureAwait(false);
-
-            if (selectedGroup == null)
-            {
-                return new JsonResult(new List<SimpleQuizModel>());
-            }
-
-            var users = selectedGroup.UserLinks
-                .Select(e => Translation.SimpleTranslate(e.LinkedUser))
-                .ToList();
-
-            return new JsonResult(users);
-        }
-
-        /// <summary>
-        /// Выполняет получение списка тестов.
-        /// </summary>
-        /// <param name="groupId">Идентификатор группы пользователя.</param>
-        /// <param name="userId">Идентификатор пользователя.</param>
-        /// <returns>Задача, возвращающая результат обработки.</returns>
-        [HttpGet]
-        public async Task<JsonResult> GetListTests([FromQuery] long groupId, [FromQuery] long userId)
-        {
-            var quizzesFromDb = await _db.Quizzes
-                .ToListAsync()
-                .ConfigureAwait(false);
-
-            var convertedQuizzes = quizzesFromDb
-                .Select(Translation.SimpleTranslate)
-                .ToList();
-
-            return new JsonResult(convertedQuizzes);
         }
     }
 }

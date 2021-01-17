@@ -8,7 +8,7 @@
         /// <summary>
         /// Получает или задает идентификатор пользователя.
         /// </summary>
-        public long Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Получает или задает имя пользователя.

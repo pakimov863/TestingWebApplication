@@ -97,22 +97,6 @@
         }
 
         /// <summary>
-        /// Выполняет преобразование <see cref="UserGroupDto"/> в <see cref="SimpleUserGroupModel"/>.
-        /// </summary>
-        /// <param name="dto">Исходный объект.</param>
-        /// <returns>Преобразованный объект.</returns>
-        public static SimpleUserGroupModel SimpleTranslate(UserGroupDto dto)
-        {
-            var model = new SimpleUserGroupModel
-            {
-                Id = dto.Id,
-                Title = dto.Title,
-            };
-
-            return model;
-        }
-
-        /// <summary>
         /// Выполняет преобразование <see cref="UserDto"/> в <see cref="SimpleUserModel"/>.
         /// </summary>
         /// <param name="dto">Исходный объект.</param>

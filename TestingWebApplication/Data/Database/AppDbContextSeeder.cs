@@ -1,6 +1,8 @@
 ﻿namespace TestingWebApplication.Data.Database
 {
+    using System;
     using System.Collections.Generic;
+    using Microsoft.AspNetCore.Identity;
     using Model;
     using Shared;
 
@@ -10,39 +12,49 @@
     public static class AppDbContextSeeder
     {
         /// <summary>
+        /// Выполняет заполнение базы данных.
+        /// </summary>
+        /// <param name="context">Контекст базы данных.</param>
+        /// <param name="userManager">Менеджер пользователей.</param>
+        /// <param name="roleManager">Менеджер ролей.</param>
+        public static void SeedProduction(AppDbContext context, UserManager<UserDto> userManager, RoleManager<IdentityRole> roleManager)
+        {
+            //// Пользователи.
+            var user1 = InitializeUser(userManager, "Administrator", "administrator", "1111111111");
+
+            //// Роли.
+            var role1 = InitializeRole(roleManager, "Admin");
+            var role2 = InitializeRole(roleManager, "User");
+
+            //// Связывание ролей и пользователей.
+            ConnectUserToRole(userManager, user1, role1.Name);
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
         /// Выполняет заполнение базы данных тестовыми данными.
         /// </summary>
         /// <param name="context">Контекст базы данных.</param>
-        public static void Seed(AppDbContext context)
+        /// <param name="userManager">Менеджер пользователей.</param>
+        /// <param name="roleManager">Менеджер ролей.</param>
+        public static void SeedTesting(AppDbContext context, UserManager<UserDto> userManager, RoleManager<IdentityRole> roleManager)
         {
-            //// Группы.
-            var group1 = new UserGroupDto {Title = "Преподаватели", Visible = false};
-            context.UserGroups.Add(group1);
-            var group2 = new UserGroupDto {Title = "1А", Visible = true};
-            context.UserGroups.Add(group2);
-            context.SaveChanges();
-
             //// Пользователи.
-            var user1 = new UserDto {UserName = "Admin", Password = "1"};
-            context.Users.Add(user1);
-            var user2 = new UserDto {UserName = "Иван Петров", Password = string.Empty};
-            context.Users.Add(user2);
-            var user3 = new UserDto {UserName = "Алексей Иванов", Password = string.Empty};
-            context.Users.Add(user3);
-            var user4 = new UserDto {UserName = "Сергей Алексеев", Password = string.Empty};
-            context.Users.Add(user4);
-            context.SaveChanges();
+            var user1 = InitializeUser(userManager, "Administrator", "administrator", "1111111111");
+            var user2 = InitializeUser(userManager, "Иван Петров", "i.petrov", "1111111111");
+            var user3 = InitializeUser(userManager, "Алексей Иванов", "a.ivanov", "1111111111");
+            var user4 = InitializeUser(userManager, "Сергей Алексеев", "s.alexeev", "1111111111");
 
-            //// Привязки к группам.
-            var groupLinker1 = new UserGroupLinkerDto {LinkedUser = user1, LinkedGroup = group1};
-            context.UserGroupLinkers.Add(groupLinker1);
-            var groupLinker2 = new UserGroupLinkerDto {LinkedUser = user2, LinkedGroup = group2};
-            context.UserGroupLinkers.Add(groupLinker2);
-            var groupLinker3 = new UserGroupLinkerDto {LinkedUser = user3, LinkedGroup = group2};
-            context.UserGroupLinkers.Add(groupLinker3);
-            var groupLinker4 = new UserGroupLinkerDto {LinkedUser = user4, LinkedGroup = group2};
-            context.UserGroupLinkers.Add(groupLinker4);
-            context.SaveChanges();
+            //// Роли.
+            var role1 = InitializeRole(roleManager, "Admin");
+            var role2 = InitializeRole(roleManager, "User");
+
+            //// Связывание ролей и пользователей.
+            ConnectUserToRole(userManager, user1, role1.Name);
+            ConnectUserToRole(userManager, user2, role2.Name);
+            ConnectUserToRole(userManager, user3, role2.Name);
+            ConnectUserToRole(userManager, user4, role2.Name);
 
             //// Тесты.
             var quiz1 = new QuizDto
@@ -173,6 +185,72 @@
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Создает и сохраняет пользователя с заданными параметрами.
+        /// </summary>
+        /// <param name="userManager">Менеджер пользователей.</param>
+        /// <param name="name">Имя пользователя.</param>
+        /// <param name="userName">Логин пользователя.</param>
+        /// <param name="password">Пароль пользователя.</param>
+        /// <returns>Созданный пользователь.</returns>
+        private static UserDto InitializeUser(UserManager<UserDto> userManager, string name, string userName, string password)
+        {
+            var user = new UserDto
+            {
+                Name = name,
+                UserName = userName,
+                CreatedQuizzes = new List<QuizDto>(),
+                RespondedQuizzes = new List<GeneratedQuizDto>()
+            };
+
+            var result = userManager.CreateAsync(user, password).GetAwaiter().GetResult();
+            if (!result.Succeeded)
+            {
+                throw new Exception($"Cannot create user: {userName}.");
+            }
+
+            return user;
+        }
+
+        /// <summary>
+        /// Создает и сохраняет роль с заданными параметрами.
+        /// </summary>
+        /// <param name="roleManager">Менеджер ролей.</param>
+        /// <param name="name">Название роли.</param>
+        /// <returns>Созданная роль.</returns>
+        private static IdentityRole InitializeRole(RoleManager<IdentityRole> roleManager, string name)
+        {
+            var role = new IdentityRole
+            {
+                Name = name
+            };
+
+            var result = roleManager.CreateAsync(role).GetAwaiter().GetResult();
+            if (!result.Succeeded)
+            {
+                throw new Exception($"Cannot create role: {name}.");
+            }
+
+            return role;
+        }
+
+        /// <summary>
+        /// Задает роль пользователю.
+        /// </summary>
+        /// <param name="userManager">Менеджер пользователей.</param>
+        /// <param name="user">Существующий пользователь.</param>
+        /// <param name="roleName">Название роли.</param>
+        private static void ConnectUserToRole(UserManager<UserDto> userManager, UserDto user, string roleName)
+        {
+            var needConnect = !userManager.IsInRoleAsync(user, roleName).GetAwaiter().GetResult();
+            if (!needConnect)
+            {
+                return;
+            }
+
+            userManager.AddToRoleAsync(user, roleName).GetAwaiter().GetResult();
         }
     }
 }

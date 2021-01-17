@@ -1,0 +1,41 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model TestingWebApplication.Models.AdminUsers.CreateUserViewModel
+
+@{
+    ViewBag.Title = "Создание пользователя";
+}
+
+<form method="post">
+    <div asp-validation-summary="All"></div>
+    <div>
+        <label asp-for="UserLogin"></label>
+        <div>
+            <input asp-for="UserLogin" />
+            <span asp-validation-for="UserLogin"></span>
+        </div>
+    </div>
+    <div>
+        <label asp-for="UserName"></label>
+        <div>
+            <input asp-for="UserName" />
+            <span asp-validation-for="UserName"></span>
+        </div>
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <div>
+            <input asp-for="Password" />
+            <span asp-validation-for="Password"></span>
+        </div>
+    </div>
+    <div>
+        <label asp-for="ConfirmPassword"></label>
+        <div>
+            <input asp-for="ConfirmPassword" />
+            <span asp-validation-for="ConfirmPassword"></span>
+        </div>
+    </div>
+
+    <button type="submit">Создать</button>
+    <a asp-controller="AdminUsers" asp-action="ShowList">Отмена</a>
+</form>

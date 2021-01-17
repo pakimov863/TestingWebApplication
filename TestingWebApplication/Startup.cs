@@ -3,10 +3,12 @@ namespace TestingWebApplication
     using Data.Database;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using TestingWebApplication.Data.Database.Model;
 
     /// <summary>
     /// Класс инициализации веб-сервиса.
@@ -39,6 +41,13 @@ namespace TestingWebApplication
                 options.EnableSensitiveDataLogging();
             });
             services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddIdentity<UserDto, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 10;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<AppDbContext>();
         }
 
         /// <summary>
@@ -54,6 +63,7 @@ namespace TestingWebApplication
             }
 
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
             app.UseStatusCodePages();
         }
