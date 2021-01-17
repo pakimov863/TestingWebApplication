@@ -121,10 +121,16 @@
         [HttpGet]
         public async Task<IActionResult> DeleteUser(string userId)
         {
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
             var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false);
             if (user == null)
             {
                 return StatusCode(404, $"Пользователь с заданным идентификатором ({userId}) не найден.");
+            }
+
+            if (currentUser.Id == user.Id)
+            {
+                return StatusCode(403, $"Невозможно удалить пользователя, от имени которого выполняется сессия ({userId}).");
             }
 
             await _userManager.DeleteAsync(user).ConfigureAwait(false);
