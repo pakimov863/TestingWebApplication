@@ -24,7 +24,11 @@ namespace TestingWebApplication
         /// <returns>Экземпляр созданной службы.</returns>
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+                ////webBuilder.UseKestrel(opts => opts.ListenAnyIP(5001));
+            });
         }
     }
 }
