@@ -1,0 +1,280 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using TestingWebApplication.Data.Shared
+@model TestingWebApplication.Models.AdminQuizzes.EditQuizViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.SiteName = "TestingWebApplication";
+    ViewBag.Title = "Редактирование теста";
+}
+
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row">
+        <form method="post" onsubmit="return onBeforeFormSubmit();" style="width: 100%">
+            <div asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="QuizId"></label>
+                <input asp-for="QuizId" class="form-control" readonly>
+                <span asp-validation-for="QuizId" class="invalid-feedback" style="display: block"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title"></label>
+                <input asp-for="Title" class="form-control">
+                <span asp-validation-for="Title" class="invalid-feedback" style="display: block"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalTimeSecs"></label>
+                <input asp-for="TotalTimeSecs" class="form-control">
+                <span asp-validation-for="TotalTimeSecs" class="invalid-feedback" style="display: block"></span>
+            </div>
+            <div class="form-group">
+                <label>Управление вопросами:</label><br />
+                <a href="#" class="btn btn-outline-secondary add-question-button" role="button">Добавить</a>
+                <a href="#" class="btn btn-outline-danger removeAll-question-button" role="button">Удалить все</a>
+            </div>
+            <div class="form-group">
+                <ul class="list-group list-group-flush quiz-questions-block">
+                    @if (Model != null && Model.QuizBlocks != null)
+                    {
+                        for (var i = 0; i < Model.QuizBlocks.Count; i++)
+                        {
+                            <li class="list-group-item">
+                                <div class="card">
+                                    <div class="card-body">
+                                        @Html.HiddenFor(m => m.QuizBlocks[i].BlockId)
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5 class="card-title">Конструктор вопроса</h5>
+                                            </div>
+                                            <div class="col">
+                                                <button type="button" class="close remove-question-button">&times;</button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <h6 class="card-subtitle mb-2 text-muted">Вопрос</h6>
+                                                <div class="input-group mb-3 question-block">
+                                                    <div class="input-group-prepend">
+                                                        <select asp-for="QuizBlocks[i].Question.QuestionType" asp-items="Html.GetEnumSelectList<QuestionBlockType>()" class="custom-select">
+                                                        </select>
+                                                    </div>
+                                                    <input asp-for="QuizBlocks[i].Question.Text" class="form-control"/>
+                                                    @Html.HiddenFor(m => m.QuizBlocks[i].Question.BlockId)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <h6 class="card-subtitle mb-2 text-muted">Ответы</h6>
+                                                @for (var j = 0; j < Model.QuizBlocks[i].Answers.Count; j++)
+                                                {
+                                                    <div class="input-group mb-3 answer-block-block">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">
+                                                                <input asp-for="QuizBlocks[i].Answers[j].IsCorrect">
+                                                            </div>
+                                                        </div>
+                                                        <select asp-for="QuizBlocks[i].Answers[j].AnswerType" asp-items="Html.GetEnumSelectList<AnswerBlockType>()" class="custom-select">
+                                                        </select>
+                                                        <input asp-for="QuizBlocks[i].Answers[j].Text" class="form-control w-50"/>
+                                                        @Html.HiddenFor(m => m.QuizBlocks[i].Answers[j].BlockId)
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-outline-secondary remove-answer-button">&times;</button>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <a href="#" class="card-link add-answer-button">Добавить ответ</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+    </div>
+</div>
+
+<div id="template-quiz-block" style="display:none">
+    <li class="list-group-item">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title">Конструктор вопроса</h5>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="close remove-question-button">&times;</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <h6 class="card-subtitle mb-2 text-muted">Вопрос</h6>
+                        <div class="input-group mb-3 question-block">
+                            <div class="input-group-prepend">
+                                <select id="QuizBlocks_9999__Question_QuestionType" name="QuizBlocks[9999].Question.QuestionType" asp-items="Html.GetEnumSelectList<QuestionBlockType>()" class="custom-select">
+                                </select>
+                            </div>
+                            <input type="text" id="QuizBlocks_9999__Question_Text" name="QuizBlocks[9999].Question.Text" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <h6 class="card-subtitle mb-2 text-muted">Ответы</h6>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <a href="#" class="card-link add-answer-button">Добавить ответ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</div>
+<div id="template-quiz-answer" style="display:none">
+    <div class="input-group mb-3 answer-block-block">
+        <div class="input-group-prepend">
+            <div class="input-group-text">
+                <input type="checkbox" id="QuizBlocks_9999__Answers_9999__IsCorrect" name="QuizBlocks[9999].Answers[9999].IsCorrect">
+            </div>
+        </div>
+        <select id="QuizBlocks_9999__Answers_9999__AnswerType" name="QuizBlocks[9999].Answers[9999].AnswerType" asp-items="Html.GetEnumSelectList<AnswerBlockType>()" class="custom-select">
+        </select>
+        <input type="text" id="QuizBlocks_9999__Answers_9999__Text" name="QuizBlocks[9999].Answers[9999].Text" class="form-control w-50">
+        <div class="input-group-append">
+            <button type="button" class="btn btn-outline-secondary remove-answer-button">&times;</button>
+        </div>
+    </div>
+</div>
+
+@section FooterScripts
+{
+    <script>
+        //// Переработка идентификаторов формы
+        var onBeforeFormSubmit = function () {
+            $("#template-quiz-block").remove();
+            $("#template-quiz-answer").remove();
+            $("form > input[name*='QuizBlocks']").remove();
+
+            var quizBlockContainer = $(".quiz-questions-block");
+            var quizBlocks = quizBlockContainer.find("div.card-body");
+            quizBlocks.each(function (i) {
+                var quizBlock = $(this);
+                var questionSelect = quizBlock.find(".question-block select");
+                questionSelect.attr("id", questionSelect.attr("id").replace(/QuizBlocks_\d+_/gi, "QuizBlocks_" + i + "_"));
+                questionSelect.attr("name", questionSelect.attr("name").replace(/QuizBlocks\[\d+\]/gi, "QuizBlocks[" + i + "]"));
+                var questionInput = quizBlock.find(".question-block input");
+                questionInput.attr("id", questionInput.attr("id").replace(/QuizBlocks_\d+_/gi, "QuizBlocks_" + i + "_"));
+                questionInput.attr("name", questionInput.attr("name").replace(/QuizBlocks\[\d+\]/gi, "QuizBlocks[" + i + "]"));
+
+                var answerBlocks = quizBlock.find(".answer-block-block");
+                answerBlocks.each(function (j) {
+                    var answerBlock = $(this);
+                    var answerCheckbox = answerBlock.find("div > input");
+                    answerCheckbox.attr("id", answerCheckbox.attr("id").replace(/QuizBlocks_\d+_/gi, "QuizBlocks_" + i + "_").replace(/Answers_\d+_/gi, "Answers_" + j + "_"));
+                    answerCheckbox.attr("name", answerCheckbox.attr("name").replace(/QuizBlocks\[\d+\]/gi, "QuizBlocks[" + i + "]").replace(/Answers\[\d+\]/gi, "Answers[" + j + "]"));
+                    var answerSelect = answerBlock.find("select");
+                    answerSelect.attr("id", answerSelect.attr("id").replace(/QuizBlocks_\d+_/gi, "QuizBlocks_" + i + "_").replace(/Answers_\d+_/gi, "Answers_" + j + "_"));
+                    answerSelect.attr("name", answerSelect.attr("name").replace(/QuizBlocks\[\d+\]/gi, "QuizBlocks[" + i + "]").replace(/Answers\[\d+\]/gi, "Answers[" + j + "]"));
+                    var answerInput = answerBlock.find("input.w-50");
+                    answerInput.attr("id", answerInput.attr("id").replace(/QuizBlocks_\d+_/gi, "QuizBlocks_" + i + "_").replace(/Answers_\d+_/gi, "Answers_" + j + "_"));
+                    answerInput.attr("name", answerInput.attr("name").replace(/QuizBlocks\[\d+\]/gi, "QuizBlocks[" + i + "]").replace(/Answers\[\d+\]/gi, "Answers[" + j + "]"));
+                });
+            });
+
+            return true;
+        };
+
+        //// Установка событий для уже существующих кнопок (например, если форма вернулась)
+        $(".remove-question-button").click(function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var questionPanel = btn.parent().parent().parent().parent().parent();
+            questionPanel.remove();
+        });
+
+        $(".remove-answer-button").click(function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var answerPanel = btn.parent().parent();
+            answerPanel.remove();
+        });
+
+        $(".add-answer-button").click(function (e) {
+            e.preventDefault();
+
+            var blk = $("#template-quiz-answer").children().first().clone();
+            var blkRemoveAnswerBtn = blk.find(".remove-answer-button");
+            blkRemoveAnswerBtn.click(function (e) {
+                e.preventDefault();
+
+                var btn = $(this);
+                var answerPanel = btn.parent().parent();
+                answerPanel.remove();
+            });
+
+            var btn = $(this);
+            var answersPanel = btn.parent().parent().prev().children().first();
+            answersPanel.append(blk);
+        });
+
+        //// Установка события на кнопку удаления всех вопросов
+        $(".removeAll-question-button").click(function (e) {
+            e.preventDefault();
+
+            $(".quiz-questions-block").empty();
+        });
+
+        //// Установка события на кнопку добавления блока вопроса
+        $(".add-question-button").click(function (e) {
+            e.preventDefault();
+
+            var blk = $("#template-quiz-block").children().first().clone();
+            var blkAddAnswerBtn = blk.find(".add-answer-button");
+            blkAddAnswerBtn.click(function (e) {
+                e.preventDefault();
+
+                var blk = $("#template-quiz-answer").children().first().clone();
+                var blkRemoveAnswerBtn = blk.find(".remove-answer-button");
+                blkRemoveAnswerBtn.click(function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var answerPanel = btn.parent().parent();
+                    answerPanel.remove();
+                });
+
+                var btn = $(this);
+                var answersPanel = btn.parent().parent().prev().children().first();
+                answersPanel.append(blk);
+            });
+
+            var blkRemoveQuestionBtn = blk.find(".remove-question-button");
+            blkRemoveQuestionBtn.click(function (e) {
+                e.preventDefault();
+
+                var btn = $(this);
+                var questionPanel = btn.parent().parent().parent().parent().parent();
+                questionPanel.remove();
+            });
+
+            $(".quiz-questions-block").append(blk);
+        });
+    </script>
+}

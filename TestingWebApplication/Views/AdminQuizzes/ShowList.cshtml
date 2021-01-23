@@ -1,0 +1,21 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<TestingWebApplication.Data.Database.Model.QuizDto>
+
+@{
+    ViewBag.Title = "Доступные тесты";
+}
+
+<a asp-controller="AdminQuizzes" asp-action="CreateQuiz">Создать тест</a>
+
+@foreach (var quiz in Model)
+{
+    <div>
+        <div>ID : @quiz.Id</div>
+        <div>@quiz.Title</div>
+        <div>@quiz.QuizBlocks.Count</div>
+        <div>
+            <a asp-controller="AdminQuizzes" asp-action="EditQuiz" asp-route-quizId="@quiz.Id">Редактировать</a>
+            <a asp-controller="AdminQuizzes" asp-action="DeleteQuiz" asp-route-quizId="@quiz.Id">Удалить</a>
+        </div>
+    </div>
+}
