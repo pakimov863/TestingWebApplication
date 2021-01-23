@@ -1,37 +1,63 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using TestingWebApplication.Models.AdminRoles;
-
-namespace TestingWebApplication.Controllers
+﻿namespace TestingWebApplication.Controllers
 {
+    using System.Threading.Tasks;
     using Data.Database.Model;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Models.AdminRoles;
 
+    /// <summary>
+    /// Контроллер методов административной панели для управления ролями.
+    /// </summary>
     public class AdminRolesController : Controller
     {
+        /// <summary>
+        /// Менеджер ролей.
+        /// </summary>
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        /// <summary>
+        /// Менеджер пользователей.
+        /// </summary>
         private readonly UserManager<UserDto> _userManager;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="AdminRolesController"/>.
+        /// </summary>
+        /// <param name="roleManager">Менеджер ролей.</param>
+        /// <param name="userManager">Менеджер пользователей.</param>
         public AdminRolesController(RoleManager<IdentityRole> roleManager, UserManager<UserDto> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Отображает главную страницу контроллера.
+        /// </summary>
+        /// <returns>Результат для отображения.</returns>
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Отображает страницу для создания роли.
+        /// </summary>
+        /// <returns>Результат для отображения.</returns>
         [HttpGet]
         public IActionResult CreateRole()
         {
             return View();
         }
 
+        /// <summary>
+        /// Выполняет обработку полученных данных для создания роли.
+        /// </summary>
+        /// <param name="model">Модель с описанием роли.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
@@ -55,6 +81,10 @@ namespace TestingWebApplication.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Отображает страницу списка ролей.
+        /// </summary>
+        /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
         public async Task<IActionResult> ShowList()
         {
@@ -63,6 +93,11 @@ namespace TestingWebApplication.Controllers
             return View(rolesList);
         }
 
+        /// <summary>
+        /// Отображает страницу редактирования роли.
+        /// </summary>
+        /// <param name="roleId">Идентификатор роли для редактирования.</param>
+        /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
         public async Task<IActionResult> EditRole(string roleId)
         {
@@ -95,6 +130,11 @@ namespace TestingWebApplication.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Выполняет обработку полученных данных для редактирования роли.
+        /// </summary>
+        /// <param name="model">Модель с описанием роли.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpPost]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
@@ -132,6 +172,11 @@ namespace TestingWebApplication.Controllers
             return RedirectToPage("ShowList");
         }
 
+        /// <summary>
+        /// Выполняет удаление роли.
+        /// </summary>
+        /// <param name="roleId">Идентификатор роли для удаления.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpGet]
         public async Task<IActionResult> DeleteRole(string roleId)
         {

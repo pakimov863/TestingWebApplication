@@ -8,27 +8,50 @@
     using Microsoft.EntityFrameworkCore;
     using Models.AdminUsers;
 
+    /// <summary>
+    /// Контроллер методов административной панели для управления пользователями.
+    /// </summary>
     public class AdminUsersController : Controller
     {
+        /// <summary>
+        /// Менеджер пользователей.
+        /// </summary>
         private readonly UserManager<UserDto> _userManager;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="AdminUsersController"/>.
+        /// </summary>
+        /// <param name="userManager">Менеджер пользователей.</param>
         public AdminUsersController(UserManager<UserDto> userManager)
         {
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Отображает главную страницу контроллера.
+        /// </summary>
+        /// <returns>Результат для отображения.</returns>
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Отображает страницу для создания пользователя.
+        /// </summary>
+        /// <returns>Результат для отображения.</returns>
         [HttpGet]
         public IActionResult CreateUser()
         {
             return View();
         }
 
+        /// <summary>
+        /// Выполняет обработку полученных данных для создания пользователя.
+        /// </summary>
+        /// <param name="model">Модель с описанием пользователя.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserViewModel model)
         {
@@ -59,6 +82,10 @@
             return View(model);
         }
 
+        /// <summary>
+        /// Отображает страницу списка пользователей.
+        /// </summary>
+        /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
         public async Task<IActionResult> ShowList()
         {
@@ -67,6 +94,11 @@
             return View(usersList);
         }
 
+        /// <summary>
+        /// Отображает страницу редактирования пользователя.
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя для редактирования.</param>
+        /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
         public async Task<IActionResult> EditUser(string userId)
         {
@@ -86,6 +118,11 @@
             return View(model);
         }
 
+        /// <summary>
+        /// Выполняет обработку полученных данных для редактирования пользователя.
+        /// </summary>
+        /// <param name="model">Модель с описанием пользователя.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
@@ -118,6 +155,11 @@
             return RedirectToPage("ShowList");
         }
 
+        /// <summary>
+        /// Выполняет удаление пользователя.
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя для удаления.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpGet]
         public async Task<IActionResult> DeleteUser(string userId)
         {

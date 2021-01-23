@@ -9,30 +9,57 @@
     using Microsoft.EntityFrameworkCore;
     using Models.AdminQuizzes;
 
+    /// <summary>
+    /// Контроллер методов административной панели для управления тестами.
+    /// </summary>
     public class AdminQuizzesController : Controller
     {
+        /// <summary>
+        /// Менеджер пользователей.
+        /// </summary>
         private readonly UserManager<UserDto> _userManager;
 
+        /// <summary>
+        /// Контекст базы данных.
+        /// </summary>
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="AdminQuizzesController"/>.
+        /// </summary>
+        /// <param name="userManager">Менеджер пользователей.</param>
+        /// <param name="dbContext">Контекст базы данных.</param>
         public AdminQuizzesController(UserManager<UserDto> userManager, AppDbContext dbContext)
         {
             _userManager = userManager;
             _dbContext = dbContext;
         }
 
+        /// <summary>
+        /// Отображает главную страницу контроллера.
+        /// </summary>
+        /// <returns>Результат для отображения.</returns>
         [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Отображает страницу для создания теста.
+        /// </summary>
+        /// <returns>Результат для отображения.</returns>
         [HttpGet]
         public IActionResult CreateQuiz()
         {
             return View();
         }
 
+        /// <summary>
+        /// Выполняет обработку полученных данных для создания теста.
+        /// </summary>
+        /// <param name="model">Модель с описанием теста.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateQuiz(CreateQuizViewModel model)
         {
@@ -57,6 +84,10 @@
             return RedirectToPage("ShowList");
         }
 
+        /// <summary>
+        /// Отображает страницу списка тестов.
+        /// </summary>
+        /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
         public async Task<IActionResult> ShowList()
         {
@@ -67,6 +98,11 @@
             return View(quizzesList);
         }
 
+        /// <summary>
+        /// Отображает страницу редактирования теста.
+        /// </summary>
+        /// <param name="quizId">Идентификатор теста для редактирования.</param>
+        /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
         public async Task<IActionResult> EditQuiz(long quizId)
         {
@@ -85,6 +121,11 @@
             return View(model);
         }
 
+        /// <summary>
+        /// Выполняет обработку полученных данных для редактирования теста.
+        /// </summary>
+        /// <param name="model">Модель с описанием теста.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpPost]
         public async Task<IActionResult> EditQuiz(EditQuizViewModel model)
         {
@@ -166,6 +207,11 @@
             return RedirectToPage("ShowList");
         }
 
+        /// <summary>
+        /// Выполняет удаление теста.
+        /// </summary>
+        /// <param name="quizId">Идентификатор теста для удаления.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpGet]
         public async Task<IActionResult> DeleteQuiz(long quizId)
         {
@@ -181,6 +227,11 @@
             return RedirectToPage("ShowList");
         }
 
+        /// <summary>
+        /// Выполняет трансляцию модели создания теста в DTO.
+        /// </summary>
+        /// <param name="model">Модель с описанием теста.</param>
+        /// <returns>DTO-объект теста.</returns>
         private QuizDto TranslateCreateQuizModel(CreateQuizViewModel model)
         {
             var dto = new QuizDto
@@ -193,6 +244,11 @@
             return dto;
         }
 
+        /// <summary>
+        /// Выполняет трансляцию DTO в модель редактирования теста.
+        /// </summary>
+        /// <param name="dto">DTO-объект теста.</param>
+        /// <returns>Модель с описанием теста.</returns>
         private EditQuizViewModel TranslateEditQuizModel(QuizDto dto)
         {
             var model = new EditQuizViewModel
@@ -206,6 +262,11 @@
             return model;
         }
 
+        /// <summary>
+        /// Выполняет трансляцию модели блока теста в DTO.
+        /// </summary>
+        /// <param name="model">Модель с описанием блока теста.</param>
+        /// <returns>DTO-объект блока теста.</returns>
         private QuizBlockDto TranslateQuizBlockModel(QuizBlockViewModel model)
         {
             var dto = new QuizBlockDto
@@ -218,6 +279,11 @@
             return dto;
         }
 
+        /// <summary>
+        /// Выполняет трансляцию DTO в модель блока теста.
+        /// </summary>
+        /// <param name="dto">DTO-объект блока теста.</param>
+        /// <returns>Модель с описанием блока теста.</returns>
         private QuizBlockViewModel TranslateQuizBlockModel(QuizBlockDto dto)
         {
             var model = new QuizBlockViewModel
@@ -230,6 +296,11 @@
             return model;
         }
 
+        /// <summary>
+        /// Выполняет трансляцию модели блока вопроса в DTO.
+        /// </summary>
+        /// <param name="model">Модель с описанием блока вопроса.</param>
+        /// <returns>DTO-объект блока вопроса.</returns>
         private QuestionBlockDto TranslateQuestionModel(QuestionBlockViewModel model)
         {
             var dto = new QuestionBlockDto
@@ -242,6 +313,11 @@
             return dto;
         }
 
+        /// <summary>
+        /// Выполняет трансляцию DTO в модель блока вопроса.
+        /// </summary>
+        /// <param name="dto">DTO-объект блока вопроса.</param>
+        /// <returns>Модель с описанием блока вопроса.</returns>
         private QuestionBlockViewModel TranslateQuestionModel(QuestionBlockDto dto)
         {
             var model = new QuestionBlockViewModel
@@ -254,6 +330,11 @@
             return model;
         }
 
+        /// <summary>
+        /// Выполняет трансляцию модели создания теста в DTO.
+        /// </summary>
+        /// <param name="model">Модель с описанием блока ответа.</param>
+        /// <returns>DTO-объект блока ответа.</returns>
         private AnswerBlockDto TranslateAnswerModel(AnswerBlockViewModel model)
         {
             var dto = new AnswerBlockDto
@@ -267,6 +348,11 @@
             return dto;
         }
 
+        /// <summary>
+        /// Выполняет трансляцию DTO в модель блока ответа. 
+        /// </summary>
+        /// <param name="dto">DTO-объект блока ответа.</param>
+        /// <returns>Модель с описанием блока ответа.</returns>
         private AnswerBlockViewModel TranslateAnswerModel(AnswerBlockDto dto)
         {
             var model = new AnswerBlockViewModel
