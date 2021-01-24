@@ -1,0 +1,29 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model TestingWebApplication.Models.AdminQuizResults.ShowResultsViewModel
+
+@{
+    ViewBag.Title = "Доступные результаты для теста";
+}
+
+<div>
+    <div>ID : @Model.SourceQuizId</div>
+    <div>Название: @Model.SourceQuizTitle</div>
+    <div>Создал тест: @Model.CreatorUserName</div>
+    <div>
+        <a asp-controller="AdminQuizResults" asp-action="ShowList">Назад</a>
+    </div>
+</div>
+<br/>
+
+@foreach (var answerInfo in Model.Answers)
+{
+    <div>
+        <div>ID : @answerInfo.GeneratedQuizId</div>
+        <div>Тег: @answerInfo.Tag</div>
+        <div>Прошедший: @answerInfo.RespondentUserName</div>
+        <div>Время начала: @answerInfo.StartTime</div>
+        <div>
+            <a asp-controller="AdminQuizResults" asp-action="ShowSessionResult" asp-route-sessionId="@answerInfo.GeneratedQuizId">Просмотр</a>
+        </div>
+    </div>
+}

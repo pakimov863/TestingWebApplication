@@ -1,0 +1,19 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<TestingWebApplication.Models.AdminQuizResults.QuizInfoViewModel>
+
+@{
+    ViewBag.Title = "Доступные тесты";
+}
+
+@foreach (var quizInfo in Model)
+{
+    <div>
+        <div>ID : @quizInfo.Id</div>
+        <div>Название: @quizInfo.Title</div>
+        <div>Создатель: @quizInfo.UserName</div>
+        <div>Ответов: @quizInfo.AnswersCount</div>
+        <div>
+            <a asp-controller="AdminQuizResults" asp-action="ShowResults" asp-route-quizId="@quizInfo.Id">Просмотр</a>
+        </div>
+    </div>
+}
