@@ -81,7 +81,7 @@
             await _dbContext.Quizzes.AddAsync(quizDto).ConfigureAwait(false);
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
-            return RedirectToPage("ShowList");
+            return RedirectToAction("ShowList");
         }
 
         /// <summary>
@@ -129,6 +129,11 @@
         [HttpPost]
         public async Task<IActionResult> EditQuiz(EditQuizViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             var quizDto = await _dbContext.Quizzes
                 .Include(e => e.QuizBlocks)
                 .ThenInclude(e => e.Question)
@@ -204,7 +209,7 @@
             
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
-            return RedirectToPage("ShowList");
+            return RedirectToAction("ShowList");
         }
 
         /// <summary>
@@ -224,7 +229,7 @@
             _dbContext.Quizzes.Remove(quizDto);
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
-            return RedirectToPage("ShowList");
+            return RedirectToAction("ShowList");
         }
 
         /// <summary>

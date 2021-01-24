@@ -33,6 +33,6 @@
         /// </summary>
         [Required]
         [Display(Name = "Тип ответа")]
-        public  AnswerBlockType AnswerType { get; set; }
+        public AnswerBlockType AnswerType { get; set; }
     }
 }

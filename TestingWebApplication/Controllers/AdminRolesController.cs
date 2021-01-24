@@ -70,7 +70,7 @@
             var result = await _roleManager.CreateAsync(newRole).ConfigureAwait(false);
             if (result.Succeeded)
             {
-                return RedirectToPage("ShowList");
+                return RedirectToAction("ShowList");
             }
 
             foreach (var err in result.Errors)
@@ -169,7 +169,7 @@
                 }
             }
 
-            return RedirectToPage("ShowList");
+            return RedirectToAction("ShowList");
         }
 
         /// <summary>
@@ -187,7 +187,7 @@
             }
 
             await _roleManager.DeleteAsync(role).ConfigureAwait(false);
-            return RedirectToPage("ShowList");
+            return RedirectToAction("ShowList");
         }
     }
 }

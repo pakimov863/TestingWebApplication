@@ -71,7 +71,7 @@
             var result = await _userManager.CreateAsync(user).ConfigureAwait(false);
             if (result.Succeeded)
             {
-                return RedirectToPage("ShowList");
+                return RedirectToAction("ShowList");
             }
 
             foreach (var err in result.Errors)
@@ -152,7 +152,7 @@
                 return View(model);
             }
 
-            return RedirectToPage("ShowList");
+            return RedirectToAction("ShowList");
         }
 
         /// <summary>
@@ -176,7 +176,7 @@
             }
 
             await _userManager.DeleteAsync(user).ConfigureAwait(false);
-            return RedirectToPage("ShowList");
+            return RedirectToAction("ShowList");
         }
     }
 }
