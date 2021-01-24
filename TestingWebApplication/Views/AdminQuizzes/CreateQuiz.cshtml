@@ -160,6 +160,7 @@
         var onBeforeFormSubmit = function () {
             $("#template-quiz-block").remove();
             $("#template-quiz-answer").remove();
+            $("form > input[name*='QuizBlocks']").remove();
 
             var quizBlockContainer = $(".quiz-questions-block");
             var quizBlocks = quizBlockContainer.find("div.card-body");
