@@ -163,7 +163,7 @@
         [HttpGet]
         public async Task<IActionResult> DeleteUser(string userId)
         {
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User).ConfigureAwait(false);
             var user = await _userManager.FindByIdAsync(userId).ConfigureAwait(false);
             if (user == null)
             {
