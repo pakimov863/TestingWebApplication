@@ -2,7 +2,9 @@
 @model TestingWebApplication.Models.AdminQuizResults.ShowResultsViewModel
 
 @{
-    ViewBag.Title = "Доступные результаты для теста";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.SiteName = "TestingWebApplication";
+    ViewBag.Title = "Доступные результаты теста";
 }
 
 <div>

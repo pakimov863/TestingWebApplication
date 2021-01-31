@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Data;
     using Data.Database;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Models.Testing;
@@ -13,6 +14,7 @@
     /// <summary>
     /// Контроллер с методами для тестирования.
     /// </summary>
+    [Authorize]
     public class TestingController : Controller
     {
         /// <summary>

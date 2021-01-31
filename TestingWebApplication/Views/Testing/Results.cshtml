@@ -1,11 +1,15 @@
 ﻿@model TestingWebApplication.Models.Testing.TestResultsViewModel
 
 @{
-    Layout = "_Layout";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    ViewBag.SiteName = "TestingWebApplication";
     ViewBag.Title = "Результаты тестирования";
 }
 
 <h1>Тестирование завершено - @Model.TestTitle</h1>
-<div>Тестирование началось в: @Model.StartTime.ToShortDateString() @Model.StartTime.ToShortTimeString()</div><br/>
-<div>Всего вопросов: @Model.QuestionCount</div><br/>
-<div>Правильных ответов: @Model.CorrectAnswersCount (@Model.CorrectAnswersPercent%)</div><br />
+<div>Тестирование началось в: @Model.StartTime.ToShortDateString() @Model.StartTime.ToShortTimeString()</div>
+<br />
+<div>Всего вопросов: @Model.QuestionCount</div>
+<br />
+<div>Правильных ответов: @Model.CorrectAnswersCount (@Model.CorrectAnswersPercent%)</div>
+<br />

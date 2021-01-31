@@ -7,6 +7,7 @@
     using Data.Database;
     using Data.Database.Model;
     using Data.Repository.Model;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Models.TestingApi;
@@ -14,6 +15,7 @@
     /// <summary>
     /// Контроллер для API-методов контроллера тестирования.
     /// </summary>
+    [Authorize]
     public class TestingApiController : Controller
     {
         /// <summary>

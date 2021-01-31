@@ -1,5 +1,6 @@
 ﻿namespace TestingWebApplication.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using TestingWebApplication.Data.Database;
@@ -8,6 +9,7 @@
     /// <summary>
     /// Контроллер методов для домашней страницы.
     /// </summary>
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         /// <summary>
@@ -45,7 +47,7 @@
         [HttpGet]
         public IActionResult Index()
         {
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Testing");
         }
 
         /// <summary>

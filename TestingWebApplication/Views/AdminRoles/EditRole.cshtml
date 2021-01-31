@@ -2,6 +2,8 @@
 @model TestingWebApplication.Models.AdminRoles.EditRoleViewModel
 
 @{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.SiteName = "TestingWebApplication";
     ViewBag.Title = "Редактирование роли";
 }
 
@@ -25,13 +27,13 @@
     <div>
         @for (var i = 0; i < Model.UsersInRole.Count; i++)
         {
-        <div>
-            <input type="hidden" asp-for="@Model.UsersInRole[i].UserId" />
-            <input type="hidden" asp-for="@Model.UsersInRole[i].UserName" />
+            <div>
+                <input type="hidden" asp-for="@Model.UsersInRole[i].UserId" />
+                <input type="hidden" asp-for="@Model.UsersInRole[i].UserName" />
 
-            <label asp-for="@Model.UsersInRole[i].IsSelected">@Model.UsersInRole[i].UserName</label>
-            <input asp-for="@Model.UsersInRole[i].IsSelected" />
-        </div>
+                <label asp-for="@Model.UsersInRole[i].IsSelected">@Model.UsersInRole[i].UserName</label>
+                <input asp-for="@Model.UsersInRole[i].IsSelected" />
+            </div>
         }
     </div>
 

@@ -1,6 +1,7 @@
 ﻿namespace TestingWebApplication.Controllers
 {
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using TestingWebApplication.Data.Database.Model;
@@ -9,6 +10,7 @@
     /// <summary>
     /// Контроллер методов для работы с аккаунтами.
     /// </summary>
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         /// <summary>
@@ -61,7 +63,7 @@
             var result = await _signInManager.PasswordSignInAsync(model.Login, model.Password, true, false).ConfigureAwait(false);
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Testing");
             }
 
             ModelState.AddModelError("Auth", "Неверный логин или пароль.");

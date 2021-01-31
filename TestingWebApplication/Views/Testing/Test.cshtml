@@ -2,7 +2,8 @@
 @model TestingWebApplication.Data.Repository.Model.GeneratedQuizModel
 
 @{
-    Layout = "_Layout";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    ViewBag.SiteName = "TestingWebApplication";
     ViewBag.Title = "Тестирование";
     var startTimestamp = new DateTimeOffset(Model.StartTime.AddSeconds(Model.SourceQuiz.TotalTimeSecs)).ToUnixTimeMilliseconds();
 }

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Data.Database.Model;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@
     /// <summary>
     /// Контроллер методов административной панели для управления пользователями.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     public class AdminUsersController : Controller
     {
         /// <summary>

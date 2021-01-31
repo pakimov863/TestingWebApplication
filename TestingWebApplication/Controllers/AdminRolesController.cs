@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using Data.Database.Model;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@
     /// <summary>
     /// Контроллер методов административной панели для управления ролями.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     public class AdminRolesController : Controller
     {
         /// <summary>
