@@ -1,5 +1,6 @@
 ﻿namespace TestingWebApplication.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Data.Database;
@@ -89,15 +90,30 @@
         /// <summary>
         /// Отображает страницу списка тестов.
         /// </summary>
+        /// <param name="showAll">Значение, показывающее, что необходимо отобразить все тесты без привязки к текущему пользователю.</param>
         /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
-        public async Task<IActionResult> ShowList()
+        public async Task<IActionResult> ShowList([FromQuery] bool showAll = false)
         {
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User).ConfigureAwait(false);
+            if (currentUser == null)
+            {
+                return StatusCode(500, "Невозможно определить пользователя в этой сессии.");
+            }
+
+            var wherePredicate = showAll
+                ? new Func<QuizDto, bool>(e => true)
+                : new Func<QuizDto, bool>(e => e.Creator.Id == currentUser.Id);
+
             var quizzesList = await _dbContext.Quizzes
                 .Include(e => e.QuizBlocks)
                 .ToListAsync().ConfigureAwait(false);
 
-            return View(quizzesList);
+            var filteredList = quizzesList
+                .Where(wherePredicate)
+                .ToList();
+
+            return View(filteredList);
         }
 
         /// <summary>

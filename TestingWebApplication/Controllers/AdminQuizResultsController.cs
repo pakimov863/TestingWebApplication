@@ -52,10 +52,10 @@
         /// <summary>
         /// Отображает страницу списка тестов.
         /// </summary>
-        /// <param name="showAllTests">Значение, показывающее, что необходимо отобразить все тесты без привязки к текущему пользователю.</param>
+        /// <param name="showAll">Значение, показывающее, что необходимо отобразить все тесты без привязки к текущему пользователю.</param>
         /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
-        public async Task<IActionResult> ShowList([FromQuery] bool showAllTests = false)
+        public async Task<IActionResult> ShowList([FromQuery] bool showAll = false)
         {
             var currentUser = await _userManager.GetUserAsync(HttpContext.User).ConfigureAwait(false);
             if (currentUser == null)
@@ -63,7 +63,7 @@
                 return StatusCode(500, "Невозможно определить пользователя в этой сессии.");
             }
 
-            var wherePredicate = showAllTests
+            var wherePredicate = showAll
                 ? new Func<QuizDto, bool>(e => true)
                 : new Func<QuizDto, bool>(e => e.Creator.Id == currentUser.Id);
 
@@ -98,7 +98,7 @@
         /// <param name="quizId">Идентификатор теста.</param>
         /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
-        public async Task<IActionResult> ShowResults(long quizId)
+        public async Task<IActionResult> ShowResults([FromQuery] long quizId)
         {
             var sourceQuiz = await _dbContext.Quizzes
                 .Include(e => e.Creator)
@@ -140,7 +140,7 @@
         /// <param name="sessionId">Идентификатор тестовой сессии с результатами.</param>
         /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
-        public async Task<IActionResult> ShowSessionResult(long sessionId)
+        public async Task<IActionResult> ShowSessionResult([FromQuery] long sessionId)
         {
             throw new NotImplementedException();
         }

@@ -24,7 +24,7 @@
 </head>
 <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">@ViewBag.SiteName</a>
+        <a asp-controller="Admin" asp-action="Index" class="navbar-brand col-md-3 col-lg-2 mr-0 px-3">@ViewBag.SiteName</a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -41,72 +41,102 @@
                 <div class="sidebar-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">
+                            <a asp-controller="Admin" asp-action="Index" class="nav-link active">
                                 <span data-feather="home"></span>
-                                Dashboard <span class="sr-only">(current)</span>
+                                Панель управления
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a asp-controller="Testing" asp-action="Index" class="nav-link">
                                 <span data-feather="file"></span>
-                                Orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="shopping-cart"></span>
-                                Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="users"></span>
-                                Customers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="bar-chart-2"></span>
-                                Reports
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="layers"></span>
-                                Integrations
+                                Перейти к тестам
                             </a>
                         </li>
                     </ul>
 
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                        <span>Saved reports</span>
-                        <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
+                        <span>Результаты тестирований</span>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a asp-controller="AdminQuizResults" asp-action="ShowList" asp-route-showAll="false" class="nav-link">
+                                <span data-feather="file-text"></span>
+                                Мои тесты
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="AdminQuizResults" asp-action="ShowList" asp-route-showAll="true" class="nav-link">
+                                <span data-feather="file-text"></span>
+                                Все тесты
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Тесты</span>
+                        <a asp-controller="AdminQuizzes" asp-action="CreateQuiz" class="d-flex align-items-center text-muted">
                             <span data-feather="plus-circle"></span>
                         </a>
                     </h6>
                     <ul class="nav flex-column mb-2">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a asp-controller="AdminQuizzes" asp-action="CreateQuiz" class="nav-link">
                                 <span data-feather="file-text"></span>
-                                Current month
+                                Добавить тест
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a asp-controller="AdminQuizzes" asp-action="ShowList" asp-route-showAll="false" class="nav-link">
                                 <span data-feather="file-text"></span>
-                                Last quarter
+                                Мои тесты
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a asp-controller="AdminQuizzes" asp-action="ShowList" asp-route-showAll="true" class="nav-link">
                                 <span data-feather="file-text"></span>
-                                Social engagement
+                                Все тесты
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Пользователи</span>
+                        <a asp-controller="AdminUsers" asp-action="CreateUser" class="d-flex align-items-center text-muted">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a asp-controller="AdminUsers" asp-action="CreateUser" class="nav-link">
+                                <span data-feather="file-text"></span>
+                                Добавить пользователя
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a asp-controller="AdminUsers" asp-action="ShowList" class="nav-link">
                                 <span data-feather="file-text"></span>
-                                Year-end sale
+                                Все пользователи
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Роли</span>
+                        <a asp-controller="AdminRoles" asp-action="CreateRole" class="d-flex align-items-center text-muted">
+                            <span data-feather="plus-circle"></span>
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column mb-2">
+                        <li class="nav-item">
+                            <a asp-controller="AdminRoles" asp-action="CreateRole" class="nav-link">
+                                <span data-feather="file-text"></span>
+                                Добавить роль
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="AdminRoles" asp-action="ShowList" class="nav-link">
+                                <span data-feather="file-text"></span>
+                                Все роли
                             </a>
                         </li>
                     </ul>

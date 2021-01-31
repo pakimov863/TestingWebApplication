@@ -101,7 +101,7 @@
         /// <param name="roleId">Идентификатор роли для редактирования.</param>
         /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
-        public async Task<IActionResult> EditRole(string roleId)
+        public async Task<IActionResult> EditRole([FromQuery] string roleId)
         {
             var role = await _roleManager.FindByIdAsync(roleId).ConfigureAwait(false);
             if (role == null)
@@ -180,7 +180,7 @@
         /// <param name="roleId">Идентификатор роли для удаления.</param>
         /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpGet]
-        public async Task<IActionResult> DeleteRole(string roleId)
+        public async Task<IActionResult> DeleteRole([FromQuery] string roleId)
         {
             var role = await _roleManager.FindByIdAsync(roleId).ConfigureAwait(false);
             if (role == null)
