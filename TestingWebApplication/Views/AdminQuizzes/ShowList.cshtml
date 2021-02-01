@@ -16,6 +16,7 @@
         <div>@quiz.Title</div>
         <div>@quiz.QuizBlocks.Count</div>
         <div>
+            <a asp-controller="AdminQuizzes" asp-action="ExportQuiz" asp-route-quizId="@quiz.Id">Экспорт</a>
             <a asp-controller="AdminQuizzes" asp-action="EditQuiz" asp-route-quizId="@quiz.Id">Редактировать</a>
             <a asp-controller="AdminQuizzes" asp-action="DeleteQuiz" asp-route-quizId="@quiz.Id">Удалить</a>
         </div>

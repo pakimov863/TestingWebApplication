@@ -1,11 +1,14 @@
 ﻿namespace TestingWebApplication.Controllers
 {
     using System;
+    using System.IO;
     using System.Linq;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using Data.Database;
     using Data.Database.Model;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
@@ -122,7 +125,7 @@
         /// <param name="quizId">Идентификатор теста для редактирования.</param>
         /// <returns>Задача, возвращающая результат для отображения.</returns>
         [HttpGet]
-        public async Task<IActionResult> EditQuiz(long quizId)
+        public async Task<IActionResult> EditQuiz([FromQuery] long quizId)
         {
             var quizDto = await _dbContext.Quizzes
                 .Include(e => e.QuizBlocks)
@@ -236,7 +239,7 @@
         /// <param name="quizId">Идентификатор теста для удаления.</param>
         /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpGet]
-        public async Task<IActionResult> DeleteQuiz(long quizId)
+        public async Task<IActionResult> DeleteQuiz([FromQuery] long quizId)
         {
             var quizDto = await _dbContext.Quizzes.FirstOrDefaultAsync(e => e.Id == quizId).ConfigureAwait(false);
             if (quizDto == null)
@@ -247,6 +250,89 @@
             _dbContext.Quizzes.Remove(quizDto);
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
+            return RedirectToAction("ShowList");
+        }
+
+        /// <summary>
+        /// Выполняет экспорт теста.
+        /// </summary>
+        /// <param name="quizId">Идентификатор теста для экспорта.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
+        [HttpGet]
+        public async Task<IActionResult> ExportQuiz([FromQuery] long quizId)
+        {
+            var quizDto = await _dbContext.Quizzes
+                .Include(e => e.QuizBlocks)
+                .ThenInclude(e => e.Question)
+                .Include(e => e.QuizBlocks)
+                .ThenInclude(e => e.Answers)
+                .FirstOrDefaultAsync(e => e.Id == quizId).ConfigureAwait(false);
+            if (quizDto == null)
+            {
+                return StatusCode(404, $"Тест с заданным идентификатором ({quizId}) не найден.");
+            }
+
+            var exportingQuizModel = TranslateCreateQuizModel(quizDto);
+
+            var fileName = $"ExportedQuiz_{quizId}_{DateTimeOffset.Now.ToUnixTimeSeconds()}.json";
+            var stream = new MemoryStream();
+            await JsonSerializer.SerializeAsync(stream, exportingQuizModel).ConfigureAwait(false);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return File(stream, "application/json", fileName);
+        }
+
+        /// <summary>
+        /// Выполняет импорт файла с тестом.
+        /// </summary>
+        /// <param name="importFile">Импортируемый файл.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
+        [HttpGet]
+        public async Task<IActionResult> ImportQuiz(IFormFile importFile)
+        {
+            CreateQuizViewModel model;
+
+            try
+            {
+                var fileStream = new MemoryStream();
+                await importFile.CopyToAsync(fileStream).ConfigureAwait(false);
+                model = await JsonSerializer.DeserializeAsync<CreateQuizViewModel>(fileStream).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Импортированный файл не может быть распознан как действительный тест. Ошибка: {e.Message}");
+            }
+
+            if (model == null)
+            {
+                return StatusCode(500, "Импортированный файл не может быть распознан как действительный тест.");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User).ConfigureAwait(false);
+            if (currentUser == null)
+            {
+                return StatusCode(500, "Невозможно определить пользователя в этой сессии.");
+            }
+
+            var quizDto = TranslateCreateQuizModel(model);
+
+            //// Обнуляем тест, чтобы при импорте были созданы новые объекты.
+            quizDto.Id = 0;
+            quizDto.Creator = currentUser;
+            foreach (var quizBlock in quizDto.QuizBlocks)
+            {
+                quizBlock.Id = 0;
+                quizBlock.Question.Id = 0;
+
+                foreach (var quizBlockAnswer in quizBlock.Answers)
+                {
+                    quizBlockAnswer.Id = 0;
+                }
+            }
+
+            await _dbContext.Quizzes.AddAsync(quizDto).ConfigureAwait(false);
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            
             return RedirectToAction("ShowList");
         }
 
@@ -265,6 +351,23 @@
             };
 
             return dto;
+        }
+
+        /// <summary>
+        /// Выполняет трансляцию DTO в модель создания теста.
+        /// </summary>
+        /// <param name="dto">DTO-объект теста.</param>
+        /// <returns>Модель с описанием теста.</returns>
+        private CreateQuizViewModel TranslateCreateQuizModel(QuizDto dto)
+        {
+            var model = new CreateQuizViewModel
+            {
+                Title = dto.Title,
+                TotalTimeSecs = dto.TotalTimeSecs,
+                QuizBlocks = dto.QuizBlocks.Select(TranslateQuizBlockModel).ToList()
+            };
+
+            return model;
         }
 
         /// <summary>
