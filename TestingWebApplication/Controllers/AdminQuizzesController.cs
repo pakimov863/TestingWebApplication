@@ -120,6 +120,35 @@
         }
 
         /// <summary>
+        /// Выполняет экспорт теста.
+        /// </summary>
+        /// <param name="quizId">Идентификатор теста для экспорта.</param>
+        /// <returns>Задача, возвращающая результат обработки.</returns>
+        [HttpGet]
+        public async Task<IActionResult> ExportQuiz([FromQuery] long quizId)
+        {
+            var quizDto = await _dbContext.Quizzes
+                .Include(e => e.QuizBlocks)
+                .ThenInclude(e => e.Question)
+                .Include(e => e.QuizBlocks)
+                .ThenInclude(e => e.Answers)
+                .FirstOrDefaultAsync(e => e.Id == quizId).ConfigureAwait(false);
+            if (quizDto == null)
+            {
+                return StatusCode(404, $"Тест с заданным идентификатором ({quizId}) не найден.");
+            }
+
+            var exportingQuizModel = TranslateCreateQuizModel(quizDto);
+
+            var fileName = $"ExportedQuiz_{quizId}_{DateTimeOffset.Now.ToUnixTimeSeconds()}.json";
+            var stream = new MemoryStream();
+            await JsonSerializer.SerializeAsync(stream, exportingQuizModel).ConfigureAwait(false);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return File(stream, "application/json", fileName);
+        }
+
+        /// <summary>
         /// Отображает страницу редактирования теста.
         /// </summary>
         /// <param name="quizId">Идентификатор теста для редактирования.</param>
@@ -254,32 +283,13 @@
         }
 
         /// <summary>
-        /// Выполняет экспорт теста.
+        /// Отображает страницу импорта теста.
         /// </summary>
-        /// <param name="quizId">Идентификатор теста для экспорта.</param>
         /// <returns>Задача, возвращающая результат обработки.</returns>
         [HttpGet]
-        public async Task<IActionResult> ExportQuiz([FromQuery] long quizId)
+        public IActionResult ImportQuiz()
         {
-            var quizDto = await _dbContext.Quizzes
-                .Include(e => e.QuizBlocks)
-                .ThenInclude(e => e.Question)
-                .Include(e => e.QuizBlocks)
-                .ThenInclude(e => e.Answers)
-                .FirstOrDefaultAsync(e => e.Id == quizId).ConfigureAwait(false);
-            if (quizDto == null)
-            {
-                return StatusCode(404, $"Тест с заданным идентификатором ({quizId}) не найден.");
-            }
-
-            var exportingQuizModel = TranslateCreateQuizModel(quizDto);
-
-            var fileName = $"ExportedQuiz_{quizId}_{DateTimeOffset.Now.ToUnixTimeSeconds()}.json";
-            var stream = new MemoryStream();
-            await JsonSerializer.SerializeAsync(stream, exportingQuizModel).ConfigureAwait(false);
-            stream.Seek(0, SeekOrigin.Begin);
-
-            return File(stream, "application/json", fileName);
+            return View();
         }
 
         /// <summary>
@@ -287,15 +297,16 @@
         /// </summary>
         /// <param name="importFile">Импортируемый файл.</param>
         /// <returns>Задача, возвращающая результат обработки.</returns>
-        [HttpGet]
-        public async Task<IActionResult> ImportQuiz(IFormFile importFile)
+        [HttpPost]
+        public async Task<IActionResult> ImportQuiz(ImportQuizViewModel importFile)
         {
             CreateQuizViewModel model;
 
             try
             {
                 var fileStream = new MemoryStream();
-                await importFile.CopyToAsync(fileStream).ConfigureAwait(false);
+                await importFile.File.CopyToAsync(fileStream).ConfigureAwait(false);
+                fileStream.Seek(0, SeekOrigin.Begin);
                 model = await JsonSerializer.DeserializeAsync<CreateQuizViewModel>(fileStream).ConfigureAwait(false);
             }
             catch (Exception e)
