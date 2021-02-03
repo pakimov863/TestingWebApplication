@@ -14,13 +14,12 @@
 <br />
 
 <div class="container">
-    @using (Html.BeginForm("QuizPublish", "TestingApi", FormMethod.Post))
-    {
+    <form method="post">
         @Html.HiddenFor(m => m.Id)
         @Html.DisplayFor(m => m.SourceQuiz, "Testing/QuizEditor")
 
         <input type="submit" value="Закончить" />
-    }
+    </form>
 </div>
 
 <script src="~/js/jquery.min.js"></script>

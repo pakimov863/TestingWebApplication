@@ -1,5 +1,5 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model TestingWebApplication.Models.TestingApi.TestCreateViewModel
+@model TestingWebApplication.Models.Testing.QuizStartViewModel
 
 @{
     Layout = "~/Views/Shared/_UserLayout.cshtml";
@@ -12,21 +12,7 @@
         <div class="col-md-6 col-md-offset-3 well">
             <h3 class="text-center">Авторизация для тестирования</h3>
 
-            <form asp-controller="TestingApi" asp-action="QuizCreate" method="post">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label asp-for="UserGroupId">Группа</label>
-                        <select asp-for="UserGroupId" class="form-control"></select>
-                        <span asp-validation-for="UserGroupId" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label asp-for="UserId">Пользователь</label>
-                        <select asp-for="UserId" class="form-control"></select>
-                        <span asp-validation-for="UserId" class="text-danger"></span>
-                    </div>
-                </div>
+            <form method="post">
                 <div class="col-xs-12">
                     <div class="form-group">
                         <label asp-for="QuizId">Тест</label>
