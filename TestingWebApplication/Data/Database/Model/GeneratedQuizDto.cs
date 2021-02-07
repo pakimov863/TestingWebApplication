@@ -33,6 +33,11 @@
         public DateTime StartTime { get; set; }
 
         /// <summary>
+        /// Получает или задает время окончания тестирования.
+        /// </summary>
+        public DateTime EndTime { get; set; }
+
+        /// <summary>
         /// Получает или задает тест, к которому привязан сгенерированный тест.
         /// </summary>
         public virtual QuizDto SourceQuiz { get; set; }

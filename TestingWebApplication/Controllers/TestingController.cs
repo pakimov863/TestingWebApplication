@@ -158,6 +158,7 @@
 
             quizDto.UserAnswers = new List<UserAnswerDto>();
             quizDto.IsEnded = true;
+            quizDto.EndTime = DateTime.Now;
 
             if (model.SourceQuiz.QuizBlocks != null)
             {
@@ -233,12 +234,20 @@
                 return RedirectToAction("QuizProcess", new {token});
             }
 
+            if (!generatedQuiz.IsEnded)
+            {
+                generatedQuiz.IsEnded = true;
+                generatedQuiz.EndTime = generatedQuiz.StartTime.AddSeconds(generatedQuiz.SourceQuiz.TotalTimeSecs);
+                _db.UserQuizzes.Update(generatedQuiz);
+                await _db.SaveChangesAsync().ConfigureAwait(false);
+            }
+
             var view = new TestResultsViewModel
             {
                 TestTitle = generatedQuiz.SourceQuiz.Title,
                 StartTime = generatedQuiz.StartTime,
                 QuestionCount =  generatedQuiz.SourceQuiz.QuizBlocks.Count,
-                CorrectAnswersCount = 0,
+                CorrectAnswersCount = 0
             };
 
             foreach (var quizBlock in generatedQuiz.SourceQuiz.QuizBlocks)
