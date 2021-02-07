@@ -13,6 +13,12 @@
         /// </summary>
         [Display(Name = "Идентификатор теста")]
         public long GeneratedQuizId { get; set; }
+        
+        /// <summary>
+        /// Получает или задает значение, показывающее, выбран ли этот пункт.
+        /// </summary>
+        [Display(Name = "Сохранить в отчет")]
+        public bool IsSelected { get; set; }
 
         /// <summary>
         /// Получает или задает тег теста.

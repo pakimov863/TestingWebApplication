@@ -1,0 +1,100 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model TestingWebApplication.Models.AdminQuizResults.ShowSessionResultViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.SiteName = "TestingWebApplication";
+    ViewBag.Title = "Результаты тестирования";
+}
+
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row">
+        <div style="width: 100%">
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-group">
+                        <label asp-for="Title"></label>
+                        <input asp-for="Title" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-group">
+                        <label asp-for="TotalTimeSecs"></label>
+                        <input asp-for="TotalTimeSecs" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-group">
+                        <label asp-for="Username"></label>
+                        <input asp-for="Username" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="StartTime"></label>
+                    <input asp-for="StartTime" class="form-control" disabled />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EndTime"></label>
+                    <input asp-for="EndTime" class="form-control" disabled />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <ul class="list-group list-group-flush">
+                    @for (var i = 0; i < Model.QuizBlocks.Count; i++)
+                    {
+                        <li class="list-group-item">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title">Вопрос #@(i + 1)</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-subtitle mb-2 text-muted">Вопрос</h6>
+                                            <div class="input-group mb-3">
+                                                <input asp-for="QuizBlocks[i].Question.Text" class="form-control" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-subtitle mb-2 text-muted">Ответы</h6>
+                                            @for (var j = 0; j < Model.QuizBlocks[i].Answers.Count; j++)
+                                            {
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">
+                                                            <input asp-for="QuizBlocks[i].Answers[j].IsCorrect" disabled />
+                                                        </div>
+                                                    </div>
+                                                    <input asp-for="QuizBlocks[i].Answers[j].Text" class="form-control @Model.QuizBlocks[i].Answers[j].AdditionalStyle w-50" readonly />
+                                                    <div class="input-group-append">
+                                                        <div class="input-group-text">
+                                                            <input asp-for="QuizBlocks[i].Answers[j].IsAnswered" disabled />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
