@@ -7,12 +7,21 @@
     ViewBag.Title = "Импорт теста";
 }
 
-<form method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="All"></div>
-    <div class="custom-file">
-        <label asp-for="File" class="custom-file-label"></label>
-        <input asp-for="File" class="custom-file-input">
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
     </div>
+    <div class="row">
+        <form method="post" enctype="multipart/form-data" style="width: 100%">
+            <div asp-validation-summary="All"></div>
+            <div class="custom-file mb-3">
+                <label asp-for="File" class="custom-file-label"></label>
+                <input asp-for="File" class="custom-file-input" />
+                <span asp-validation-for="File" class="invalid-feedback" style="display: block"></span>
+            </div>
 
-    <button type="submit">Импортировать</button>
-</form>
+            <button class="btn btn-primary" type="submit">Импортировать</button>
+            <a href="#" onClick="history.back(); return false;" class="btn btn-outline-secondary" role="button">Назад</a>
+        </form>
+    </div>
+</div>

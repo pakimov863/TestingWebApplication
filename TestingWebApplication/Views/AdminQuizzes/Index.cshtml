@@ -6,4 +6,37 @@
     ViewBag.Title = "Управление тестами";
 }
 
-Hello world.
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row">
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Добавьте тесты</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="AdminQuizzes" asp-action="CreateQuiz" class="card-link">Перейти</a>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Импортируйте/экспортируйте тесты</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="AdminQuizzes" asp-action="ImportQuiz" class="card-link">Перейти к импорту</a>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Просматривайте список тестов</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="AdminQuizzes" asp-action="ShowList" class="card-link">Перейти</a>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Редактируйте тесты</h5>
+                <p class="card-text">Текст-подсказка.</p>
+            </div>
+        </div>
+    </div>
+</div>

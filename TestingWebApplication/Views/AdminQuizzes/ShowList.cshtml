@@ -7,18 +7,41 @@
     ViewBag.Title = "Доступные тесты";
 }
 
-<a asp-controller="AdminQuizzes" asp-action="CreateQuiz">Создать тест</a>
-
-@foreach (var quiz in Model)
-{
-    <div>
-        <div>ID : @quiz.Id</div>
-        <div>@quiz.Title</div>
-        <div>@quiz.QuizBlocks.Count</div>
-        <div>
-            <a asp-controller="AdminQuizzes" asp-action="ExportQuiz" asp-route-quizId="@quiz.Id">Экспорт</a>
-            <a asp-controller="AdminQuizzes" asp-action="EditQuiz" asp-route-quizId="@quiz.Id">Редактировать</a>
-            <a asp-controller="AdminQuizzes" asp-action="DeleteQuiz" asp-route-quizId="@quiz.Id">Удалить</a>
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <a asp-controller="AdminQuizzes" asp-action="CreateQuiz" class="btn btn-success" role="button">Добавить тест</a>
+            <a href="#" onClick="history.back(); return false;" class="btn btn-outline-secondary" role="button">Назад</a>
         </div>
     </div>
-}
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Вопросов</th>
+                    <th scope="col">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var quiz in Model)
+                {
+                    <tr>
+                        <th scope="row">@quiz.Id</th>
+                        <td>@quiz.Title</td>
+                        <td>@quiz.QuizBlocks.Count</td>
+                        <td>
+                            <a asp-controller="AdminQuizzes" asp-action="ExportQuiz" asp-route-quizId="@quiz.Id" class="btn btn-secondary btn-sm" role="button"><span data-feather="download"></span></a>
+                            <a asp-controller="AdminQuizzes" asp-action="EditQuiz" asp-route-quizId="@quiz.Id" class="btn btn-danger btn-sm" role="button"><span data-feather="edit"></span></a>
+                            <a asp-controller="AdminQuizzes" asp-action="DeleteQuiz" asp-route-quizId="@quiz.Id" class="btn btn-danger btn-sm" role="button"><span data-feather="trash-2"></span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

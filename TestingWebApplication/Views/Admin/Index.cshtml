@@ -6,4 +6,51 @@
     ViewBag.Title = "Панель управления";
 }
 
-Hello world.
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row">
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Использование панели управления</h5>
+                <p class="card-text">Текст-подсказка.</p>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Очистка базы данных</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="Admin" asp-action="Clear" class="card-link">Перейти</a>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Управление результатами тестов</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="AdminQuizResults" asp-action="Index" class="card-link">Перейти</a>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Управление тестами</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="AdminQuizzes" asp-action="Index" class="card-link">Перейти</a>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Управление пользователями</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="AdminUsers" asp-action="Index" class="card-link">Перейти</a>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Управление ролями</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="AdminRoles" asp-action="Index" class="card-link">Перейти</a>
+            </div>
+        </div>
+    </div>
+</div>

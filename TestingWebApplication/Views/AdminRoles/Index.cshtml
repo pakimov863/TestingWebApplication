@@ -6,4 +6,30 @@
     ViewBag.Title = "Управление ролями";
 }
 
-Hello world.
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row">
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Добавьте роли</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="AdminRoles" asp-action="CreateRole" class="card-link">Перейти</a>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Просматривайте список ролей</h5>
+                <p class="card-text">Текст-подсказка.</p>
+                <a asp-controller="AdminRoles" asp-action="ShowList" class="card-link">Перейти</a>
+            </div>
+        </div>
+        <div class="card col-12 mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Редактируйте роли</h5>
+                <p class="card-text">Текст-подсказка.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,16 +7,40 @@
     ViewBag.Title = "Доступные пользователи";
 }
 
-<a asp-controller="AdminUsers" asp-action="CreateUser">Создать пользователя</a>
-
-@foreach (var user in Model)
-{
-    <div>
-        <div>ID : @user.Id</div>
-        <div>@user.Name</div>
-        <div>
-            <a asp-controller="AdminUsers" asp-action="EditUser" asp-route-roleId="@user.Id">Редактировать</a>
-            <a asp-controller="AdminUsers" asp-action="DeleteUser" asp-route-roleId="@user.Id">Удалить</a>
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <a asp-controller="AdminUsers" asp-action="CreateUser" class="btn btn-success" role="button">Добавить пользователя</a>
+            <a href="#" onClick="history.back(); return false;" class="btn btn-outline-secondary" role="button">Назад</a>
         </div>
     </div>
-}
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Логин</th>
+                <th scope="col">Имя пользователя</th>
+                <th scope="col">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <th scope="row">@user.Id</th>
+                    <td>@user.UserName</td>
+                    <td>@user.Name</td>
+                    <td>
+                        <a asp-controller="AdminUsers" asp-action="EditUser" asp-route-userId="@user.Id" class="btn btn-secondary btn-sm" role="button"><span data-feather="edit"></span></a>
+                        <a asp-controller="AdminUsers" asp-action="DeleteUser" asp-route-userId="@user.Id" class="btn btn-danger btn-sm" role="button"><span data-feather="trash-2"></span></a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

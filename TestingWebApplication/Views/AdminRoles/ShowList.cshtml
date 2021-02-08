@@ -7,16 +7,40 @@
     ViewBag.Title = "Доступные роли";
 }
 
-<a asp-controller="AdminRoles" asp-action="CreateRole">Создать роль</a>
-
-@foreach (var role in Model)
-{
-    <div>
-        <div>ID : @role.Id</div>
-        <div>@role.Name</div>
-        <div>
-            <a asp-controller="AdminRoles" asp-action="EditRole" asp-route-roleId="@role.Id">Редактировать</a>
-            <a asp-controller="AdminRoles" asp-action="DeleteRole" asp-route-roleId="@role.Id">Удалить</a>
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <a asp-controller="AdminRoles" asp-action="CreateRole" class="btn btn-success" role="button">Добавить роль</a>
+            <a href="#" onClick="history.back(); return false;" class="btn btn-outline-secondary" role="button">Назад</a>
         </div>
     </div>
-}
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Пользователи</th>
+                    <th scope="col">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var role in Model)
+                {
+                    <tr>
+                        <th scope="row">@role.Id</th>
+                        <td>@role.Name</td>
+                        <td>0</td>
+                        <td>
+                            <a asp-controller="AdminRoles" asp-action="EditRole" asp-route-roleId="@role.Id" class="btn btn-secondary btn-sm" role="button"><span data-feather="edit"></span></a>
+                            <a asp-controller="AdminRoles" asp-action="DeleteRole" asp-route-roleId="@role.Id" class="btn btn-danger btn-sm" role="button"><span data-feather="trash-2"></span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

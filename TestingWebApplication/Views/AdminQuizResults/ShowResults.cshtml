@@ -7,25 +7,56 @@
     ViewBag.Title = "Доступные результаты теста";
 }
 
-<div>
-    <div>ID : @Model.SourceQuizId</div>
-    <div>Название: @Model.SourceQuizTitle</div>
-    <div>Создал тест: @Model.CreatorUserName</div>
-    <div>
-        <a asp-controller="AdminQuizResults" asp-action="ShowList">Назад</a>
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
     </div>
-</div>
-<br/>
-
-@foreach (var answerInfo in Model.Answers)
-{
-    <div>
-        <div>ID : @answerInfo.GeneratedQuizId</div>
-        <div>Тег: @answerInfo.Tag</div>
-        <div>Прошедший: @answerInfo.RespondentUserName</div>
-        <div>Время начала: @answerInfo.StartTime</div>
-        <div>
-            <a asp-controller="AdminQuizResults" asp-action="ShowSessionResult" asp-route-sessionId="@answerInfo.GeneratedQuizId">Просмотр</a>
+    <div class="row mb-3">
+        <div class="col">
+            <a href="#" onClick="history.back(); return false;" class="btn btn-outline-secondary" role="button">Назад</a>
         </div>
     </div>
-}
+    <div class="row mb-3">
+        <div class="card col-12">
+            <div class="card-body">
+                <h5 class="card-title">Выбран тест</h5>
+                <h6 class="card-subtitle mb-2 text-muted">@Model.SourceQuizTitle</h6>
+                <p class="card-text">
+                    Идентификатор: @Model.SourceQuizId
+                    <br />
+                    Тест создал: @Model.CreatorUserName
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Начало теста</th>
+                    <th scope="col">Имя пользователя</th>
+                    <th scope="col">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.Answers.Count; i++)
+                {
+                    <tr>
+                        <th scope="row">
+                            <input type="hidden" asp-for="@Model.Answers[i].GeneratedQuizId"/>
+
+                            <label asp-for="@Model.Answers[i].IsSelected">@Model.Answers[i].GeneratedQuizId</label>
+                            <input asp-for="@Model.Answers[i].IsSelected" class="form-check-input ml-1" />
+                        </th>
+                        <td>@Model.Answers[i].StartTime</td>
+                        <td>@Model.Answers[i].RespondentUserName</td>
+                        <td>
+                            <a asp-controller="AdminQuizResults" asp-action="ShowSessionResult" asp-route-sessionId="@Model.Answers[i].GeneratedQuizId" class="btn btn-secondary btn-sm" role="button"><span data-feather="eye"></span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

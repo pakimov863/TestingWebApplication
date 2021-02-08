@@ -7,15 +7,40 @@
     ViewBag.Title = "Доступные тесты";
 }
 
-@foreach (var quizInfo in Model)
-{
-    <div>
-        <div>ID : @quizInfo.Id</div>
-        <div>Название: @quizInfo.Title</div>
-        <div>Создатель: @quizInfo.UserName</div>
-        <div>Ответов: @quizInfo.AnswersCount</div>
-        <div>
-            <a asp-controller="AdminQuizResults" asp-action="ShowResults" asp-route-quizId="@quizInfo.Id">Просмотр</a>
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <a href="#" onClick="history.back(); return false;" class="btn btn-outline-secondary" role="button">Назад</a>
         </div>
     </div>
-}
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Создал</th>
+                    <th scope="col">Ответов</th>
+                    <th scope="col">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var quizInfo in Model)
+                {
+                    <tr>
+                        <th scope="row">@quizInfo.Id</th>
+                        <td>@quizInfo.Title</td>
+                        <td>@quizInfo.UserName</td>
+                        <td>@quizInfo.AnswersCount</td>
+                        <td>
+                            <a asp-controller="AdminQuizResults" asp-action="ShowResults" asp-route-quizId="@quizInfo.Id" class="btn btn-secondary btn-sm" role="button"><span data-feather="eye"></span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
