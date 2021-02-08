@@ -74,7 +74,7 @@
             }
 
             var quizDto = TranslateCreateQuizModel(model);
-            var currentUser = await _userManager.GetUserAsync(HttpContext.User);
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User).ConfigureAwait(false);
             if (currentUser == null)
             {
                 ModelState.AddModelError("UnknownUser", "Невозможно определить пользователя в этой сессии");
