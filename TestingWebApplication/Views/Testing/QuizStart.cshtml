@@ -4,24 +4,56 @@
 @{
     Layout = "~/Views/Shared/_UserLayout.cshtml";
     ViewBag.SiteName = "TestingWebApplication";
-    ViewBag.Title = "Авторизация для тестирования";
+    ViewBag.Title = "Начало тестирования";
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3 well">
-            <h3 class="text-center">Авторизация для тестирования</h3>
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-11 col-sm-11 col-md-7 mr-md-4">
+            <div class="row">
+                <div class="card col-12 mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Доступные тесты</h5>
+                        <p class="card-text">Выберите тест из списка и нажмите кнопку "Начать".</p>
+                        <form method="post">
+                            <div class="form-group">
+                                <select asp-for="QuizId" class="custom-select">
+                                    <option value="-1" selected disabled>Выберите тест</option>
+                                    @foreach (var quiz in Model.AvailableQuizzes)
+                                    {
+                                        <option value="@quiz.QuizId">@quiz.Title</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="QuizId" class="invalid-feedback" style="display: block"></span>
+                            </div>
 
-            <form method="post">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label asp-for="QuizId">Тест</label>
-                        <input asp-for="QuizId">
-                        <span asp-validation-for="QuizId" class="text-danger"></span>
+                            <button class="btn btn-primary" type="submit">Начать</button>
+                        </form>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Начать</button>
-            </form>
+            </div>
+        </div>
+        <div class="col-11 col-sm-11 col-md-4">
+            <div class="row">
+                <div class="card" style="width: 100%">
+                    <div class="card-body">
+                        <h5 class="card-title">Текущий пользователь</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@Model.UserName</h6>
+                        <p class="card-text">Группа: @Model.UserRole.</p>
+                        @if (Model.StartedQuizzes.Any())
+                        {
+                            <h6 class="card-subtitle mb-2 text-muted">Запущенные тесты</h6>
+                            foreach (var quiz in Model.StartedQuizzes)
+                            {
+                                <a asp-controller="Testing" asp-action="QuizProcess" asp-route-token="@quiz.QuizTag" class="card-link">@quiz.Title</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

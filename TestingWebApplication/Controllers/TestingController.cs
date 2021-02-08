@@ -57,9 +57,44 @@
         /// </summary>
         /// <returns>Результат обработки.</returns>
         [HttpGet]
-        public IActionResult QuizStart()
+        public async Task<IActionResult> QuizStart()
         {
-            return View();
+            var currentUser = await _userManager.GetUserAsync(HttpContext.User).ConfigureAwait(false);
+            if (currentUser == null)
+            {
+                return StatusCode(500, "Невозможно определить пользователя в этой сессии.");
+            }
+
+            var model = new QuizStartViewModel();
+            var userRoles = await _userManager.GetRolesAsync(currentUser).ConfigureAwait(false);
+            model.UserName = currentUser.Name;
+            model.UserRole = string.Join(" / ", userRoles);
+
+            var startedQuizzes = await _db.UserQuizzes
+                .Include(e => e.RespondentUser)
+                .Include(e => e.SourceQuiz)
+                .Where(e => !e.IsEnded && e.RespondentUser.Id == currentUser.Id)
+                .ToListAsync().ConfigureAwait(false);
+            foreach (var quiz in startedQuizzes)
+            {
+                var quizModel = new QuizDescriptionViewModel();
+                quizModel.QuizTag = quiz.Tag;
+                quizModel.Title = quiz.SourceQuiz.Title;
+
+                model.StartedQuizzes.Add(quizModel);
+            }
+
+            var allQuizzes = await _db.Quizzes.ToListAsync().ConfigureAwait(false);
+            foreach (var quiz in allQuizzes)
+            {
+                var quizModel = new QuizDescriptionViewModel();
+                quizModel.QuizId = quiz.Id;
+                quizModel.Title = quiz.Title;
+
+                model.AvailableQuizzes.Add(quizModel);
+            }
+
+            return View(model);
         }
 
         /// <summary>
