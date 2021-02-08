@@ -55,6 +55,7 @@
         /// </summary>
         /// <returns>Статус операции для отображения.</returns>
         [HttpGet]
+        ////[AllowAnonymous]
         public string Clear()
         {
             AppDbContextSeeder.Clear(_dbContext);
