@@ -52,7 +52,22 @@
         [HttpGet]
         public IActionResult CreateRole()
         {
-            return View();
+            var model = new CreateRoleViewModel();
+
+            foreach (var user in _userManager.Users)
+            {
+                var userRoleViewModel = new UserRoleViewModel
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    Name = user.Name,
+                    IsSelected = false
+                };
+
+                model.UsersInRole.Add(userRoleViewModel);
+            }
+
+            return View(model);
         }
 
         /// <summary>
@@ -123,6 +138,7 @@
                 {
                     UserId = user.Id,
                     UserName = user.UserName,
+                    Name = user.Name,
                     IsSelected = isSelected
                 };
 

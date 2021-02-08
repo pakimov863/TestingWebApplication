@@ -15,11 +15,18 @@
         public string UserId { get; set; }
 
         /// <summary>
+        /// Получает или задает логин пользователя.
+        /// </summary>
+        [Required]
+        [Display(Name = "Логин пользователя")]
+        public string UserName { get; set; }
+
+        /// <summary>
         /// Получает или задает имя пользователя.
         /// </summary>
         [Required]
         [Display(Name = "Имя пользователя")]
-        public string UserName { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Получает или задает значение, показывающее, выбран ли пользователь.

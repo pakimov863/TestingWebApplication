@@ -7,15 +7,49 @@
     ViewBag.Title = "Создание роли";
 }
 
-<form method="post">
-    <div asp-validation-summary="All"></div>
-    <div class="form-group row">
-        <label asp-for="RoleName"></label>
-        <div>
-            <input asp-for="RoleName">
-            <span asp-validation-for="RoleName"></span>
-        </div>
+<div class="col">
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
     </div>
+    <div class="row">
+        <form method="post" style="width: 100%">
+            <div asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="RoleName"></label>
+                <input asp-for="RoleName" class="form-control" />
+                <span asp-validation-for="RoleName" class="invalid-feedback" style="display: block"></span>
+            </div>
+            <div class="form-group">
+                <label>Пользователи в роли</label>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Логин</th>
+                        <th scope="col">Имя пользователя</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for (var i = 0; i < Model.UsersInRole.Count; i++)
+                    {
+                        <tr>
+                            <th scope="row">
+                                <input type="hidden" asp-for="@Model.UsersInRole[i].UserId" />
+                                <input type="hidden" asp-for="@Model.UsersInRole[i].UserName" />
 
-    <button type="submit">Создать</button>
-</form>
+                                <label asp-for="@Model.UsersInRole[i].IsSelected">@Model.UsersInRole[i].UserId</label>
+                                <input asp-for="@Model.UsersInRole[i].IsSelected" class="form-check-input ml-1" />
+                            </th>
+                            <td>@Model.UsersInRole[i].UserName</td>
+                            <td>@Model.UsersInRole[i].Name</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Создать</button>
+            <a href="#" onClick="history.back(); return false;" class="btn btn-outline-secondary" role="button">Назад</a>
+        </form>
+    </div>
+</div>
