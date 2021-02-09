@@ -12,6 +12,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Data.Shared;
     using Models.Testing;
     using Utils;
 
@@ -259,7 +260,7 @@
                 .ThenInclude(e => e.QuizBlocks)
                 .ThenInclude(e => e.Answers)
                 .Include(e => e.UserAnswers)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (generatedQuiz == null)
             {
@@ -281,16 +282,28 @@
                 await _db.SaveChangesAsync().ConfigureAwait(false);
             }
 
-            var questionCount = generatedQuiz.SourceQuiz.MaxQuizBlocksCount > 0 && generatedQuiz.SourceQuiz.MaxQuizBlocksCount <= generatedQuiz.SourceQuiz.QuizBlocks.Count
-                ? generatedQuiz.SourceQuiz.MaxQuizBlocksCount
-                : generatedQuiz.SourceQuiz.QuizBlocks.Count;
-            var view = new TestResultsViewModel
+            var model = new TestResultsViewModel();
+            model.TestTitle = generatedQuiz.SourceQuiz.Title;
+            model.StartTime = generatedQuiz.StartTime;
+            model.CorrectAnswersCount = 0;
+
+            if (generatedQuiz.SourceQuiz.MaxQuizBlocksCount > 0 && generatedQuiz.SourceQuiz.MaxQuizBlocksCount <= generatedQuiz.SourceQuiz.QuizBlocks.Count)
             {
-                TestTitle = generatedQuiz.SourceQuiz.Title,
-                StartTime = generatedQuiz.StartTime,
-                QuestionCount =  questionCount,
-                CorrectAnswersCount = 0
-            };
+                if (generatedQuiz.SourceQuiz.ShowResultsToUser)
+                {
+                    model.QuizBlocks = TranslateSessionResultModel(generatedQuiz).ToList();
+                    var tempQuiz = Translation.Translate(generatedQuiz);
+                    tempQuiz = CommonHelpers.ShuffleQuizData(tempQuiz);
+                    var quizBlockIds = tempQuiz.SourceQuiz.QuizBlocks.Take(tempQuiz.SourceQuiz.MaxQuizBlocks).Select(e => e.Id).ToList();
+                    model.QuizBlocks = model.QuizBlocks.Where(e => quizBlockIds.Contains(e.BlockId)).ToList();
+                }
+
+                model.QuestionCount = generatedQuiz.SourceQuiz.MaxQuizBlocksCount;
+            }
+            else
+            {
+                model.QuestionCount = generatedQuiz.SourceQuiz.QuizBlocks.Count;
+            }
 
             foreach (var quizBlock in generatedQuiz.SourceQuiz.QuizBlocks)
             {
@@ -302,11 +315,68 @@
 
                 if (CommonHelpers.CheckQuizAnswer(quizBlock, quizUserAnswer))
                 {
-                    view.CorrectAnswersCount++;
+                    model.CorrectAnswersCount++;
                 }
             }
 
-            return View(view);
+            return View(model);
+        }
+
+        /// <summary>
+        /// Выполняет преобразование результатов теста в модель.
+        /// </summary>
+        /// <param name="dto">DTO результата тестирования.</param>
+        /// <returns>Перечисление моделей блоков теста.</returns>
+        private IEnumerable<ResultQuizBlockViewModel> TranslateSessionResultModel(GeneratedQuizDto dto)
+        {
+            foreach (var quizBlockDto in dto.SourceQuiz.QuizBlocks)
+            {
+                var quizBlockModel = new ResultQuizBlockViewModel();
+
+                quizBlockModel.BlockId = quizBlockDto.Id;
+                quizBlockModel.Question = new ResultQuestionBlockViewModel();
+                quizBlockModel.Question.Text = quizBlockDto.Question.Text;
+                quizBlockModel.Question.QuestionType = quizBlockDto.Question.QuestionType;
+
+                foreach (var answerBlockDto in quizBlockDto.Answers)
+                {
+                    var answerBlockModel = new ResultAnswerBlockViewModel();
+                    answerBlockModel.Text = answerBlockDto.Text;
+                    answerBlockModel.AnswerType = answerBlockDto.AnswerType;
+                    answerBlockModel.IsCorrect = answerBlockDto.IsCorrect;
+                    answerBlockModel.IsAnswered = false;
+                    quizBlockModel.Answers.Add(answerBlockModel);
+
+                    var userAnswerDto = dto.UserAnswers.FirstOrDefault(e => e.QuizBlockId == quizBlockDto.Id);
+                    if (userAnswerDto != null)
+                    {
+                        var userAnswerList = userAnswerDto.UserAnswer.Split(new[] {Environment.NewLine}, StringSplitOptions.None);
+                        switch (answerBlockDto.AnswerType)
+                        {
+                            case AnswerBlockType.Text:
+                                var firstUserAnswer = userAnswerList.First().Trim();
+                                var firstBlockAnswer = answerBlockDto.Text.Trim();
+                                answerBlockModel.IsAnswered = firstBlockAnswer.Equals(firstUserAnswer, StringComparison.InvariantCultureIgnoreCase);
+                                answerBlockModel.Text += " / " + firstUserAnswer;
+                                break;
+                            case AnswerBlockType.Checkbox:
+                            case AnswerBlockType.Radio:
+                                answerBlockModel.IsAnswered = userAnswerList.Contains(answerBlockDto.Id.ToString());
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException(nameof(answerBlockDto.AnswerType));
+                        }
+                    }
+
+                    answerBlockModel.AdditionalStyle = answerBlockModel.IsCorrect == answerBlockModel.IsAnswered
+                        ? answerBlockModel.IsCorrect 
+                            ? "is-valid"
+                            : ""
+                        : "is-invalid";
+                }
+
+                yield return quizBlockModel;
+            }
         }
     }
 }

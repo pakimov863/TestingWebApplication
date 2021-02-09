@@ -62,6 +62,7 @@
                 Title = "Title of quiz 1",
                 TotalTimeSecs = 5000,
                 MaxQuizBlocksCount = 5,
+                ShowResultsToUser = true,
                 QuizBlocks = new List<QuizBlockDto>
                 {
                     new QuizBlockDto
@@ -117,6 +118,7 @@
                 Title = "Title of quiz 2",
                 TotalTimeSecs = 2000,
                 MaxQuizBlocksCount = 3,
+                ShowResultsToUser = false,
                 QuizBlocks = new List<QuizBlockDto>
                 {
                     new QuizBlockDto

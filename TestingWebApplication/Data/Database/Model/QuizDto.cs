@@ -32,6 +32,11 @@
         public int MaxQuizBlocksCount { get; set; }
 
         /// <summary>
+        /// Получает или задает значение, показывающее, необходимо ли показать результаты пользователю после теста.
+        /// </summary>
+        public bool ShowResultsToUser { get; set; }
+
+        /// <summary>
         /// Получает или задает пользователя, создавшего тест.
         /// </summary>
         public virtual UserDto Creator { get; set; }
