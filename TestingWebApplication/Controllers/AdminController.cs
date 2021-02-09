@@ -56,12 +56,17 @@
         /// <returns>Статус операции для отображения.</returns>
         [HttpGet]
         ////[AllowAnonymous]
-        public string Clear()
+        public IActionResult Clear()
         {
             AppDbContextSeeder.Clear(_dbContext);
             AppDbContextSeeder.SeedTesting(_dbContext, _userManager, _roleManager);
 
-            return "OK";
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
