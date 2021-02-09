@@ -168,6 +168,10 @@
 
             var quiz = Translation.Translate(generatedQuiz);
             quiz = CommonHelpers.ShuffleQuizData(quiz);
+            if (quiz.SourceQuiz.MaxQuizBlocks > 0 && quiz.SourceQuiz.MaxQuizBlocks <= quiz.SourceQuiz.QuizBlocks.Count)
+            {
+                quiz.SourceQuiz.QuizBlocks = quiz.SourceQuiz.QuizBlocks.Take(quiz.SourceQuiz.MaxQuizBlocks).ToList();
+            }
 
             return View(quiz);
         }
@@ -277,11 +281,14 @@
                 await _db.SaveChangesAsync().ConfigureAwait(false);
             }
 
+            var questionCount = generatedQuiz.SourceQuiz.MaxQuizBlocksCount > 0 && generatedQuiz.SourceQuiz.MaxQuizBlocksCount <= generatedQuiz.SourceQuiz.QuizBlocks.Count
+                ? generatedQuiz.SourceQuiz.MaxQuizBlocksCount
+                : generatedQuiz.SourceQuiz.QuizBlocks.Count;
             var view = new TestResultsViewModel
             {
                 TestTitle = generatedQuiz.SourceQuiz.Title,
                 StartTime = generatedQuiz.StartTime,
-                QuestionCount =  generatedQuiz.SourceQuiz.QuizBlocks.Count,
+                QuestionCount =  questionCount,
                 CorrectAnswersCount = 0
             };
 

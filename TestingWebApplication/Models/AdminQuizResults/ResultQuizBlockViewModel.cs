@@ -17,6 +17,11 @@
         }
 
         /// <summary>
+        /// Получает или задает идентификатор блока вопроса.
+        /// </summary>
+        public long BlockId { get; set; }
+
+        /// <summary>
         /// Получает или задает блок вопроса.
         /// </summary>
         [Required]

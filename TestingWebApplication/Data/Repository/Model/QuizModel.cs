@@ -23,6 +23,11 @@
         public long TotalTimeSecs { get; set; }
 
         /// <summary>
+        /// Получает или задает максимальное количество тестовых блоков в сгенерированном тесте.
+        /// </summary>
+        public int MaxQuizBlocks { get; set; }
+
+        /// <summary>
         /// Получает или задает коллекцию вопросов теста.
         /// </summary>
         public IList<QuizBlockModel> QuizBlocks { get; set; }

@@ -38,6 +38,13 @@
         public long TotalTimeSecs { get; set; }
 
         /// <summary>
+        /// Получает или задает максимальное количество тестовых блоков в сгенерированном тесте.
+        /// </summary>
+        [Required]
+        [Display(Name = "Максимальное количество вопросов")]
+        public int MaxQuizBlocksCount { get; set; }
+
+        /// <summary>
         /// Получает или задает коллекцию блоков теста.
         /// </summary>
         public List<QuizBlockViewModel> QuizBlocks { get; set; }

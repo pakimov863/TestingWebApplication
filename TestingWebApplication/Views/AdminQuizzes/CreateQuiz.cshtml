@@ -20,10 +20,17 @@
                 <input asp-for="Title" class="form-control">
                 <span asp-validation-for="Title" class="invalid-feedback" style="display: block"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="TotalTimeSecs"></label>
-                <input asp-for="TotalTimeSecs" class="form-control">
-                <span asp-validation-for="TotalTimeSecs" class="invalid-feedback" style="display: block"></span>
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="TotalTimeSecs"></label>
+                    <input asp-for="TotalTimeSecs" class="form-control" />
+                    <span asp-validation-for="TotalTimeSecs" class="invalid-feedback" style="display: block"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="MaxQuizBlocksCount"></label>
+                    <input asp-for="MaxQuizBlocksCount" class="form-control" />
+                    <span asp-validation-for="MaxQuizBlocksCount" class="invalid-feedback" style="display: block"></span>
+                </div>
             </div>
             <div class="form-group">
                 <label>Управление вопросами:</label><br />

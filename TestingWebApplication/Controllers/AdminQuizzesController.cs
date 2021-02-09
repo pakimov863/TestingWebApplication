@@ -357,6 +357,7 @@
             {
                 Title = model.Title,
                 TotalTimeSecs = model.TotalTimeSecs,
+                MaxQuizBlocksCount = model.MaxQuizBlocksCount,
                 QuizBlocks = model.QuizBlocks.Select(TranslateQuizBlockModel).ToList()
             };
 
@@ -374,6 +375,7 @@
             {
                 Title = dto.Title,
                 TotalTimeSecs = dto.TotalTimeSecs,
+                MaxQuizBlocksCount = dto.MaxQuizBlocksCount,
                 QuizBlocks = dto.QuizBlocks.Select(TranslateQuizBlockModel).ToList()
             };
 

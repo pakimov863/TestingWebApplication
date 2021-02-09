@@ -73,6 +73,7 @@
                 Id = dto.Id,
                 Title = dto.Title,
                 TotalTimeSecs = dto.TotalTimeSecs,
+                MaxQuizBlocks = dto.MaxQuizBlocksCount,
                 QuizBlocks = dto.QuizBlocks.Select(Translate).ToList(),
             };
 

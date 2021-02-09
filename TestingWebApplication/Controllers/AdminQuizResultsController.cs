@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Data;
     using Data.Database;
     using Data.Database.Model;
     using Data.Shared;
@@ -157,6 +158,9 @@
             resultSb.Append("Пользователь;").Append("Правильных ответов;").Append("Всего вопросов;").Append("% правильных;").AppendLine();
             foreach (var generatedQuiz in generatedQuizzes)
             {
+                var questionCount = generatedQuiz.SourceQuiz.MaxQuizBlocksCount > 0 && generatedQuiz.SourceQuiz.MaxQuizBlocksCount <= generatedQuiz.SourceQuiz.QuizBlocks.Count
+                    ? generatedQuiz.SourceQuiz.MaxQuizBlocksCount
+                    : generatedQuiz.SourceQuiz.QuizBlocks.Count;
                 var correctAnswerCount = 0;
                 foreach (var quizBlock in generatedQuiz.SourceQuiz.QuizBlocks)
                 {
@@ -172,12 +176,12 @@
                     }
                 }
 
-                var correctPercent = correctAnswerCount * 100 / generatedQuiz.SourceQuiz.QuizBlocks.Count;
+                var correctPercent = correctAnswerCount * 100 / questionCount;
 
                  resultSb
                      .Append(generatedQuiz.RespondentUser.Name).Append(";")
                      .Append(correctAnswerCount).Append(";")
-                     .Append(generatedQuiz.SourceQuiz.QuizBlocks.Count).Append(";")
+                     .Append(questionCount).Append(";")
                      .Append(correctPercent).Append(";")
                      .AppendLine();
             }
@@ -217,6 +221,15 @@
             }
 
             var model = TranslateSessionResultModel(generatedQuiz);
+
+            if (generatedQuiz.SourceQuiz.MaxQuizBlocksCount > 0 && generatedQuiz.SourceQuiz.MaxQuizBlocksCount <= generatedQuiz.SourceQuiz.QuizBlocks.Count)
+            {
+                var tempQuiz = Translation.Translate(generatedQuiz);
+                tempQuiz = CommonHelpers.ShuffleQuizData(tempQuiz);
+                var quizBlockIds = tempQuiz.SourceQuiz.QuizBlocks.Take(tempQuiz.SourceQuiz.MaxQuizBlocks).Select(e => e.Id).ToList();
+                model.QuizBlocks = model.QuizBlocks.Where(e => quizBlockIds.Contains(e.BlockId)).ToList();
+            }
+
             return View(model);
         }
 
@@ -254,6 +267,7 @@
             var model = new ShowSessionResultViewModel();
             model.Title = dto.SourceQuiz.Title;
             model.TotalTimeSecs = dto.SourceQuiz.TotalTimeSecs;
+            model.MaxQuizBlocksCount = dto.SourceQuiz.MaxQuizBlocksCount;
             model.Username = dto.RespondentUser.Name;
             model.StartTime = dto.StartTime;
             model.EndTime = dto.EndTime;
@@ -261,7 +275,8 @@
             foreach (var quizBlockDto in dto.SourceQuiz.QuizBlocks)
             {
                 var quizBlockModel = new ResultQuizBlockViewModel();
-                
+
+                quizBlockModel.BlockId = quizBlockDto.Id;
                 quizBlockModel.Question = new ResultQuestionBlockViewModel();
                 quizBlockModel.Question.Text = quizBlockDto.Question.Text;
                 quizBlockModel.Question.QuestionType = quizBlockDto.Question.QuestionType;

@@ -27,6 +27,11 @@
         public long TotalTimeSecs { get; set; }
 
         /// <summary>
+        /// Получает или задает максимальное количество тестовых блоков в сгенерированном тесте.
+        /// </summary>
+        public int MaxQuizBlocksCount { get; set; }
+
+        /// <summary>
         /// Получает или задает пользователя, создавшего тест.
         /// </summary>
         public virtual UserDto Creator { get; set; }
