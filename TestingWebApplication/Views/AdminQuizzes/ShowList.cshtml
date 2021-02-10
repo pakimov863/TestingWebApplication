@@ -36,7 +36,7 @@
                         <td>@quiz.QuizBlocks.Count</td>
                         <td>
                             <a asp-controller="AdminQuizzes" asp-action="ExportQuiz" asp-route-quizId="@quiz.Id" class="btn btn-secondary btn-sm" role="button"><span data-feather="download"></span></a>
-                            <a asp-controller="AdminQuizzes" asp-action="EditQuiz" asp-route-quizId="@quiz.Id" class="btn btn-danger btn-sm" role="button"><span data-feather="edit"></span></a>
+                            <a asp-controller="AdminQuizzes" asp-action="EditQuiz" asp-route-quizId="@quiz.Id" class="btn btn-warning btn-sm" role="button"><span data-feather="edit"></span></a>
                             <a asp-controller="AdminQuizzes" asp-action="DeleteQuiz" asp-route-quizId="@quiz.Id" class="btn btn-danger btn-sm" role="button"><span data-feather="trash-2"></span></a>
                         </td>
                     </tr>
