@@ -1,4 +1,5 @@
 ﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using TestingWebApplication.Data.Shared
 @model TestingWebApplication.Data.Repository.Model.GeneratedQuizModel
 
 @{
@@ -8,32 +9,132 @@
     var startTimestamp = new DateTimeOffset(Model.StartTime.AddSeconds(Model.SourceQuiz.TotalTimeSecs)).ToUnixTimeMilliseconds();
 }
 
-<h1>Тестирование - @Model.SourceQuiz.Title</h1>
-
-<div>Времени осталось: <span id="timer">@startTimestamp</span></div>
-<br />
-
 <div class="container">
-    <form method="post">
-        @Html.HiddenFor(m => m.Id)
-        @Html.DisplayFor(m => m.SourceQuiz, "Testing/QuizEditor")
+    <div class="row d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">@ViewBag.Title</h1>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="row">
+                <div class="card col-12 mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Текущий тест</h5>
+                        <p class="card-text">
+                            <span>Название: @Model.SourceQuiz.Title</span><br />
+                            <span>Начало тестирования: @Model.StartTime.ToShortDateString()</span><br />
+                            <span>Всего вопросов: @Model.SourceQuiz.QuizBlocks.Count</span><br />
+                            <span>Времени осталось: <span id="timer" style="display: none">@startTimestamp</span></span><br />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <form method="post">
+                @Html.HiddenFor(m => m.Id)
+                <ul class="list-group list-group-flush">
+                    @for (var i = 0; i < Model.SourceQuiz.QuizBlocks.Count; i++)
+                    {
+                        <li class="list-group-item">
+                            <div class="card">
+                                <div class="card-body">
+                                    @Html.HiddenFor(m => m.SourceQuiz.QuizBlocks[i].Id)
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title">Вопрос #@(i + 1)</h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-subtitle mb-2 text-muted">Вопрос</h6>
+                                            <div class="input-group mb-3">
+                                                @if (Model.SourceQuiz.QuizBlocks[i].Question != null)
+                                                {
+                                                    <input asp-for="SourceQuiz.QuizBlocks[i].Question.Text" class="form-control" readonly />
+                                                }
+                                                else
+                                                {
+                                                    throw new NotImplementedException("Данный тип вопроса не может быть отображен");
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <h6 class="card-subtitle mb-2 text-muted">Ответы</h6>
+                                            @for (var j = 0; j < Model.SourceQuiz.QuizBlocks[i].Answers.Count; j++)
+                                            {
+                                                var currentAnswerBlock = Model.SourceQuiz.QuizBlocks[i].Answers[j];
+                                                var answerAdditionalStyle = j != Model.SourceQuiz.QuizBlocks[i].Answers.Count - 1 ? "mb-3" : "";
 
-        <input type="submit" value="Закончить" />
-    </form>
+                                                <div class="form-inline @answerAdditionalStyle">
+                                                    @Html.HiddenFor(m => Model.SourceQuiz.QuizBlocks[i].Answers[j].Id)
+                                                    
+                                                    @if (currentAnswerBlock.AnswerType == AnswerBlockType.Radio)
+                                                    {
+                                                        <div class="form-check mb-2 mr-sm-2">
+                                                            <input class="form-check-input"
+                                                                   type="radio"
+                                                                   id="@Html.IdFor(m => m.SourceQuiz.QuizBlocks[i].Answers[j])"
+                                                                   name="@Html.NameFor(m => m.SourceQuiz.QuizBlocks[i].UserAnswer)"
+                                                                   value="@j" />
+                                                            <label class="form-check-label" asp-for="SourceQuiz.QuizBlocks[i].Answers[j]">
+                                                                @currentAnswerBlock.Text
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                    else if (currentAnswerBlock.AnswerType == AnswerBlockType.Checkbox)
+                                                    {
+                                                        <div class="form-check mb-2 mr-sm-2">
+                                                            <input class="form-check-input"
+                                                                   type="checkbox"
+                                                                   id="@Html.IdFor(m => m.SourceQuiz.QuizBlocks[i].Answers[j])"
+                                                                   name="@Html.NameFor(m => m.SourceQuiz.QuizBlocks[i].UserAnswer)"
+                                                                   value="@j" />
+                                                            <label class="form-check-label" asp-for="SourceQuiz.QuizBlocks[i].Answers[j]">
+                                                                @currentAnswerBlock.Text
+                                                            </label>
+                                                        </div>
+                                                    }
+                                                    else if (currentAnswerBlock.AnswerType == AnswerBlockType.Text)
+                                                    {
+                                                        <label class="sr-only" asp-for="SourceQuiz.QuizBlocks[i].Answers[j]">
+                                                            Введите ответ: 
+                                                        </label>
+                                                        <input class="form-control mb-2 mr-sm-2 col-12"
+                                                               type="text"
+                                                               id="@Html.IdFor(m => m.SourceQuiz.QuizBlocks[i].Answers[j])"
+                                                               name="@Html.NameFor(m => m.SourceQuiz.QuizBlocks[i].UserAnswer)" />
+                                                    }
+                                                    else
+                                                    {
+                                                        throw new NotImplementedException("Данный тип ответа не может быть отображен");
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                
+                <button class="btn btn-primary" type="submit">Закончить тест</button>
+            </form>
+        </div>
+    </div>
 </div>
 
-<script src="~/js/jquery.min.js"></script>
-<script src="~/js/jquery.jslatex.min.js"></script>
-<script src="~/js/jquery.timer.js"></script>
-<script src="~/js/bootstrap.min.js"></script>
-
-<script>
-    $(".latex").latex();
-    $("#timer").timered();
-    $('#quizCarousel').carousel({
-        interval: false,
-        keyboard: true,
-        ride: "carousel",
-        wrap: false
-    });
-</script>
+@section FooterScripts
+{
+    <script src="~/js/jquery.jslatex.min.js"></script>
+    <script src="~/js/jquery.timer.js"></script>
+    <script>
+        $(".latex").latex();
+        $("#timer").timered();
+        $("#timer").show();
+    </script>
+}

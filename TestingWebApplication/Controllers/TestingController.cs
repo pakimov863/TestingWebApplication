@@ -30,17 +30,17 @@
         /// <summary>
         /// Контекст базы данных.
         /// </summary>
-        private readonly AppDbContext _db;
+        private readonly AppDbContext _dbContext;
 
         /// <summary>
         /// Инициализирует экземпляр класса <see cref="TestingController"/>.
         /// </summary>
         /// <param name="userManager">Менеджер пользователей.</param>
-        /// <param name="db">Контекст базы данных.</param>
-        public TestingController(UserManager<UserDto> userManager, AppDbContext db)
+        /// <param name="dbContext">Контекст базы данных.</param>
+        public TestingController(UserManager<UserDto> userManager, AppDbContext dbContext)
         {
             _userManager = userManager;
-            _db = db;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -71,21 +71,28 @@
             model.UserName = currentUser.Name;
             model.UserRole = string.Join(" / ", userRoles);
 
-            var startedQuizzes = await _db.UserQuizzes
-                .Include(e => e.RespondentUser)
-                .Include(e => e.SourceQuiz)
-                .Where(e => !e.IsEnded && e.RespondentUser.Id == currentUser.Id)
-                .ToListAsync().ConfigureAwait(false);
-            foreach (var quiz in startedQuizzes)
+            var startedQuizzesCount = await _dbContext.UserQuizzes
+                .CountAsync(e => !e.IsEnded && e.RespondentUser.Id == currentUser.Id).ConfigureAwait(false);
+            if (startedQuizzesCount > 0)
             {
-                var quizModel = new QuizDescriptionViewModel();
-                quizModel.QuizTag = quiz.Tag;
-                quizModel.Title = quiz.SourceQuiz.Title;
+                var startedQuizzes = await _dbContext.UserQuizzes
+                    .Include(e => e.RespondentUser)
+                    .Include(e => e.SourceQuiz)
+                    .Where(e => !e.IsEnded && e.RespondentUser.Id == currentUser.Id)
+                    .ToListAsync().ConfigureAwait(false);
 
-                model.StartedQuizzes.Add(quizModel);
+                await UpdateQuizStatuses().ConfigureAwait(false);
+                foreach (var quiz in startedQuizzes)
+                {
+                    var quizModel = new QuizDescriptionViewModel();
+                    quizModel.QuizTag = quiz.Tag;
+                    quizModel.Title = quiz.SourceQuiz.Title;
+
+                    model.StartedQuizzes.Add(quizModel);
+                }
             }
 
-            var allQuizzes = await _db.Quizzes.ToListAsync().ConfigureAwait(false);
+            var allQuizzes = await _dbContext.Quizzes.ToListAsync().ConfigureAwait(false);
             foreach (var quiz in allQuizzes)
             {
                 var quizModel = new QuizDescriptionViewModel();
@@ -106,7 +113,7 @@
         [HttpPost]
         public async Task<IActionResult> QuizStart([FromForm] QuizStartViewModel model)
         {
-            var requiredQuiz = await _db.Quizzes
+            var requiredQuiz = await _dbContext.Quizzes
                 .Where(e => e.Id == model.QuizId)
                 .FirstOrDefaultAsync()
                 .ConfigureAwait(false);
@@ -132,8 +139,8 @@
                 UserAnswers = new List<UserAnswerDto>()
             };
 
-            await _db.UserQuizzes.AddAsync(generatedQuiz).ConfigureAwait(false);
-            await _db.SaveChangesAsync().ConfigureAwait(false);
+            await _dbContext.UserQuizzes.AddAsync(generatedQuiz).ConfigureAwait(false);
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
             return RedirectToAction("QuizProcess", "Testing", new {token = generatedQuiz.Tag});
         }
@@ -146,7 +153,7 @@
         [HttpGet]
         public async Task<IActionResult> QuizProcess([FromQuery] string token)
         {
-            var generatedQuiz = await _db.UserQuizzes
+            var generatedQuiz = await _dbContext.UserQuizzes
                 .Where(e => e.Tag == token)
                 .Include(e => e.SourceQuiz)
                 .ThenInclude(e => e.QuizBlocks)
@@ -185,7 +192,7 @@
         [HttpPost]
         public async Task<IActionResult> QuizProcess([FromForm] GeneratedQuizModel model)
         {
-            var quizDto = await _db.UserQuizzes
+            var quizDto = await _dbContext.UserQuizzes
                 .Where(e => e.Id == model.Id)
                 .Include(e => e.UserAnswers)
                 .FirstOrDefaultAsync()
@@ -237,8 +244,8 @@
                 }
             }
 
-            _db.UserQuizzes.Update(quizDto);
-            await _db.SaveChangesAsync().ConfigureAwait(false);
+            _dbContext.UserQuizzes.Update(quizDto);
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
             return RedirectToAction("Results", "Testing", new {token = quizDto.Tag});
         }
@@ -251,7 +258,7 @@
         [HttpGet]
         public async Task<IActionResult> Results([FromQuery] string token)
         {
-            var generatedQuiz = await _db.UserQuizzes
+            var generatedQuiz = await _dbContext.UserQuizzes
                 .Where(e => e.Tag == token)
                 .Include(e => e.SourceQuiz)
                 .ThenInclude(e => e.QuizBlocks)
@@ -278,8 +285,8 @@
             {
                 generatedQuiz.IsEnded = true;
                 generatedQuiz.EndTime = generatedQuiz.StartTime.AddSeconds(generatedQuiz.SourceQuiz.TotalTimeSecs);
-                _db.UserQuizzes.Update(generatedQuiz);
-                await _db.SaveChangesAsync().ConfigureAwait(false);
+                _dbContext.UserQuizzes.Update(generatedQuiz);
+                await _dbContext.SaveChangesAsync().ConfigureAwait(false);
             }
 
             var model = new TestResultsViewModel();
@@ -320,6 +327,30 @@
             }
 
             return View(model);
+        }
+
+        /// <summary>
+        /// Выполняет проверку и обновление статусов завершенных тестов.
+        /// </summary>
+        /// <returns>Задача, выполняющая обновление статусов тестов.</returns>
+        private async Task UpdateQuizStatuses()
+        {
+            var notEndedQuizzes = await _dbContext.UserQuizzes.Where(e => !e.IsEnded).ToListAsync().ConfigureAwait(false);
+            var currentDate = DateTime.Now;
+            var mustBeEndedQuizzes = notEndedQuizzes.Where(e => (currentDate - e.StartTime).TotalSeconds > e.SourceQuiz.TotalTimeSecs);
+            var mustBeSaved = false;
+            foreach (var quiz in mustBeEndedQuizzes)
+            {
+                quiz.IsEnded = true;
+                quiz.EndTime = quiz.StartTime.AddSeconds(quiz.SourceQuiz.TotalTimeSecs);
+                _dbContext.Update(quiz);
+                mustBeSaved = true;
+            }
+
+            if (mustBeSaved)
+            {
+                await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
         }
 
         /// <summary>
